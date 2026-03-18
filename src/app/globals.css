@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+:root {
+  --color-bg: #050505;
+  --color-cyan: #00f0ff;
+  --color-orange: #ff4d00;
+}
+
+* {
+  border-color: rgb(255 255 255 / 0.1);
+}
+
+html,
+body {
+  background: var(--color-bg);
+  color: white;
+}
+
+body {
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgb(0 240 255 / 0.1), transparent 35%),
+    radial-gradient(circle at 80% 8%, rgb(255 77 0 / 0.08), transparent 25%);
+}
+
+.glass-panel {
+  background: rgb(255 255 255 / 0.04);
+  backdrop-filter: blur(12px);
+}
+
+.shimmer {
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-140%);
+  background: linear-gradient(
+    110deg,
+    transparent 15%,
+    rgb(255 255 255 / 0.24) 45%,
+    transparent 70%
+  );
+  animation: shimmer 2s linear infinite;
+  pointer-events: none;
+}
+
+.scan-line::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-cyan),
+    transparent
+  );
+  animation: scan 2.2s ease-in-out infinite;
+}
+
+.glow-active {
+  animation: breatheGlow 2.8s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(140%);
+  }
+}
+
+@keyframes scan {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translateY(-140px);
+    opacity: 0.95;
+  }
+}
+
+@keyframes breatheGlow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 rgb(0 240 255 / 0.18),
+      0 0 24px rgb(0 240 255 / 0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 0 rgb(0 240 255 / 0.28),
+      0 0 40px rgb(0 240 255 / 0.4);
+  }
+}
