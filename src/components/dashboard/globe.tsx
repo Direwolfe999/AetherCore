@@ -26,14 +26,14 @@ export function Globe({ threatActive = false }: { threatActive?: boolean }) {
             height: width * 2,
             phi: 0,
             theta: 0.3,
-            dark: 1,
+            dark: 0.95,
             diffuse: 1.2,
             scale: 1,
             mapSamples: 16000,
             mapBrightness: 6,
-            baseColor: threatActive ? [1, 0.2, 0.1] : [0.1, 0.1, 0.1], // Dark gray or Red
+            baseColor: threatActive ? [1, 0.1, 0.1] : [0.15, 0.2, 0.3], // Dark blue-gray so it is visible
             markerColor: [0, 0.94, 1], // Cyan
-            glowColor: threatActive ? [1, 0.2, 0.1] : [0.1, 0.5, 0.8], // Red or Cyan
+            glowColor: threatActive ? [1, 0.1, 0.1] : [0.1, 0.6, 0.9], // Cyan glow
             offset: [0, 0],
             markers: [
                 { location: [37.7595, -122.4367], size: 0.03 }, // SF

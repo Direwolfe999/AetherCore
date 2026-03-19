@@ -103,10 +103,10 @@ Navigate to `http://localhost:3000`
 ## 📚 Documentation Reference
 
 Want to dive deeper into how AetherCore was built? Check out our comprehensive documentation suite:
-- **QUICKSTART.md**: Complete overview of features, stack, and deliverables.
-- **ARCHITECTURE.md**: Deep dive into design patterns and technical decisions.
-- **FILE_MANIFEST.md**: Detailed inventory of the codebase structure.
-- **PROJECT_SUMMARY.md**: Extended setup, environment variables, and troubleshooting.
+- **[docs/QUICKSTART.md](docs/QUICKSTART.md)**: Complete overview of features, stack, and deliverables.
+- **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**: Deep dive into design patterns and technical decisions.
+- **[docs/FILE_MANIFEST.md](docs/FILE_MANIFEST.md)**: Detailed inventory of the codebase structure.
+- **[docs/PROJECT_SUMMARY.md](docs/PROJECT_SUMMARY.md)**: Extended setup, environment variables, and troubleshooting.
 
 ---
 
