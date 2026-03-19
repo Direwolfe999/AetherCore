@@ -51,7 +51,7 @@ export function BootSequence({ onComplete }: { onComplete: () => void }) {
                             key={i}
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className={`${line.includes('[OK]') ? 'text-green-400' : line.includes('INIT') || line.includes('SYSTEM') ? 'text-cyan-400 font-bold' : 'text-zinc-400'}`}
+                            className={`${line?.includes('[OK]') ? 'text-green-400' : line?.includes('INIT') || line?.includes('SYSTEM') ? 'text-cyan-400 font-bold' : 'text-zinc-400'}`}
                         >
                             <span className="opacity-50 mr-2">{new Date().toISOString().split('T')[1].slice(0, 8)}</span>
                             {line}
