@@ -180,3 +180,19 @@ body {
     transform: translateY(100%);
   }
 }
+
+
+/* Disable selection globally */
+html, body {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+/* Re-enable for inputs if we have them */
+input, textarea {
+  -webkit-user-select: auto;
+  user-select: auto;
+}

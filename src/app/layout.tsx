@@ -9,6 +9,8 @@ import { CommandPalette } from "@/components/navigation/command-palette";
 import { GlobalBootManager } from "@/components/ui/global-boot-manager";
 import { Toaster } from "sonner";
 import { UserProvider } from '@auth0/nextjs-auth0/client';
+import { DisableInteraction } from "@/components/ui/disable-interaction";
+
 import { Suspense } from "react";
 import "./globals.css";
 

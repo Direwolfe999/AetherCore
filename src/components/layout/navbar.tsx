@@ -12,7 +12,7 @@ export function Navbar() {
             <div className="mx-auto w-full max-w-7xl px-4 py-4 md:px-6">
                 <div className="flex items-center justify-between gap-8">
                     {/* Logo & Branding */}
-                    <Link href="/" className="flex items-center gap-3 transition-all duration-300 hover:opacity-80">
+                    <a href="/" className="flex items-center gap-3 transition-all duration-300 hover:opacity-80 cursor-pointer">
                         <div className="relative">
                             <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/30 to-orange-500/30 rounded-lg blur" />
                             <div className="relative bg-white/10 p-2 rounded-lg border border-white/20">
@@ -25,7 +25,7 @@ export function Navbar() {
                             </h1>
                             <p className="text-xs text-gray-400 leading-none">Sovereign Guardian</p>
                         </div>
-                    </Link>
+                    </a>
 
                     {/* Navigation Links */}
                     <div className="hidden md:flex items-center gap-1">
