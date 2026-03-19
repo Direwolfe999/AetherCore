@@ -1,7 +1,1 @@
-{
-  "/dashboard/page": "app/dashboard/page.js",
-  "/intelligence/page": "app/intelligence/page.js",
-  "/page": "app/page.js",
-  "/settings/page": "app/settings/page.js",
-  "/vault/page": "app/vault/page.js"
-}
+{}

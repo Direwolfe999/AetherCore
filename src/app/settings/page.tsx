@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Settings,
@@ -9,6 +9,8 @@ import {
     Zap,
     Code,
     ChevronRight,
+    X,
+    Fingerprint,
 } from 'lucide-react';
 import { GlassCard } from '@/components/ui/glass-card';
 import { SectionHeading } from '@/components/ui/section-heading';
@@ -21,6 +23,7 @@ interface SettingToggle {
     icon: React.ComponentType<{ className?: string }>;
     enabled: boolean;
     color: 'cyan' | 'orange' | 'green';
+    badge?: string;
 }
 
 interface MojoLog {
@@ -57,16 +60,37 @@ export default function SettingsPage() {
             color: 'orange',
         },
         {
+            id: 'geo-fencing',
+            title: 'Geo-Fencing',
+            description: 'Block impossible travel via Auth0 Actions',
+            icon: Zap,
+            enabled: true,
+            color: 'green',
+            badge: 'Auth0 Action',
+        },
+        {
+            id: 'biometric-mfa',
+            title: 'Biometric WebAuthn',
+            description: 'Require FaceID/TouchID for Vault access step-up',
+            icon: Fingerprint,
+            enabled: true,
+            color: 'cyan',
+            badge: 'Auth0 MFA',
+        },
+        {
             id: 'identity-obfuscation',
             title: 'Identity Obfuscation',
             description: 'Hide your digital footprint with obfuscation',
-            icon: Zap,
+            icon: Eye,
             enabled: false,
             color: 'green',
         },
     ]);
 
     const [devMode, setDevMode] = useState(false);
+    const [clickCount, setClickCount] = useState(0);
+    const [lastClickTime, setLastClickTime] = useState(0);
+    const [showEasterEgg, setShowEasterEgg] = useState(false);
 
     const toggleSetting = (id: string) => {
         setSettings((prev) =>
@@ -76,8 +100,91 @@ export default function SettingsPage() {
         );
     };
 
+    const handleVersionClick = () => {
+        const now = Date.now();
+        if (now - lastClickTime < 500) {
+            if (clickCount + 1 >= 5) {
+                setShowEasterEgg(true);
+                setClickCount(0);
+            } else {
+                setClickCount(clickCount + 1);
+            }
+        } else {
+            setClickCount(1);
+        }
+        setLastClickTime(now);
+    };
+
     return (
         <div className="space-y-8">
+            <AnimatePresence>
+                {showEasterEgg && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-black/95 backdrop-blur-md"
+                    >
+                        {/* Matrix cyber grid effect */}
+                        <div
+                            className="absolute inset-0 z-0 opacity-30"
+                            style={{
+                                background: 'linear-gradient(rgba(0, 255, 0, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 0, 0.2) 1px, transparent 1px)',
+                                backgroundSize: '30px 30px',
+                                perspective: '1000px',
+                            }}
+                        />
+                        <div className="absolute inset-0 pointer-events-none" style={{ background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 0, 0.1) 2px, rgba(0, 255, 0, 0.1) 4px)" }}></div>
+
+                        {/* Content */}
+                        <div className="relative z-10 flex flex-col items-center p-8">
+                            <motion.div
+                                initial={{ scale: 0.5, opacity: 0, y: 50 }}
+                                animate={{ scale: 1, opacity: 1, y: 0 }}
+                                transition={{
+                                    type: "spring",
+                                    stiffness: 100,
+                                    damping: 10,
+                                }}
+                                className="text-center"
+                            >
+                                <h1 className="text-4xl md:text-7xl font-black text-green-500 tracking-widest uppercase"
+                                    style={{
+                                        fontFamily: 'monospace',
+                                        textShadow: '0 0 20px rgba(0,255,0,0.8), 0 0 40px rgba(0,255,0,0.5)'
+                                    }}>
+                                    HACKATHON SECURED.
+                                </h1>
+                                <h2 className="text-2xl md:text-5xl font-bold text-green-400 mt-4 tracking-widest uppercase"
+                                    style={{
+                                        fontFamily: 'monospace',
+                                        textShadow: '0 0 10px rgba(0,255,0,0.6)'
+                                    }}>
+                                    AUTH0 OVERRIDE ACCEPTED.
+                                </h2>
+                            </motion.div>
+                            
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.8, repeat: Infinity, duration: 1.5, repeatType: 'reverse' }}
+                                className="mt-8 text-green-400 font-mono text-xl md:text-2xl border border-green-500/50 bg-green-500/10 px-6 py-2 rounded"
+                            >
+                                SYSTEM OVERRIDE ACTIVE // ROOT ACCESS GRANTED
+                            </motion.div>
+                        </div>
+
+                        {/* Close button */}
+                        <button
+                            onClick={() => setShowEasterEgg(false)}
+                            className="absolute top-6 right-6 z-20 p-3 rounded-full bg-green-500/10 border border-green-500/30 text-green-500 hover:bg-green-500/20 hover:text-green-300 transition-colors group cursor-pointer"
+                        >
+                            <X className="w-8 h-8 group-hover:scale-110 transition-transform" />
+                        </button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             {/* Header */}
             <SectionHeading level="h1" subtitle="Customize your Guardian">
                 Sovereign Controls
@@ -119,7 +226,10 @@ export default function SettingsPage() {
                                             </motion.div>
 
                                             <div className="flex-1">
-                                                <h3 className="font-semibold text-white">{setting.title}</h3>
+                                                <h3 className="font-semibold text-white flex items-center gap-2">
+                                                    {setting.title}
+                                                    {setting.badge && <Badge color="info" className="text-[10px] py-0 px-2">{setting.badge}</Badge>}
+                                                </h3>
                                                 <p className="text-sm text-gray-400">{setting.description}</p>
                                             </div>
                                         </div>
@@ -290,12 +400,12 @@ export default function SettingsPage() {
 
                         <div className="space-y-3 border-t border-white/10 pt-4">
                             {[
-                                { label: 'AetherCore Version', value: 'v1.0.0' },
+                                { label: 'AetherCore Version', value: 'v1.0.0', onClick: handleVersionClick, style: { cursor: 'pointer', userSelect: 'none' } },
                                 { label: 'Mojo Engine', value: 'Operational' },
                                 { label: 'Threat Database', value: 'Up to date' },
                                 { label: 'System Status', value: 'All Systems Nominal' },
                             ].map((item) => (
-                                <div key={item.label} className="flex items-center justify-between text-sm">
+                                <div key={item.label} className="flex items-center justify-between text-sm" onClick={item.onClick} style={item.style as any}>
                                     <span className="text-gray-400">{item.label}</span>
                                     <span className="text-white font-medium">{item.value}</span>
                                 </div>
@@ -307,3 +417,4 @@ export default function SettingsPage() {
         </div>
     );
 }
+

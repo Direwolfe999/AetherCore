@@ -1,0 +1,95 @@
+--- /dev/fd/63	2026-03-19 09:42:53.691239672 +0100
++++ /dev/fd/62	2026-03-19 09:42:53.695239477 +0100
+@@ -1,6 +1,6 @@
+ 'use client';
+ 
+-import { useState, useEffect } from 'react';
++import { useState, useEffect, useRef } from 'react';
+ import { motion, AnimatePresence } from 'framer-motion';
+ import { Terminal, AlertCircle, AlertTriangle, AlertOctagon } from 'lucide-react';
+ import { GlassCard } from '@/components/ui/glass-card';
+@@ -65,6 +65,14 @@
+ export default function IntelligencePage() {
+     const [events, setEvents] = useState<ThreatEvent[]>(mockThreatEvents);
+     const [isLive, setIsLive] = useState(true);
++    const scrollRef = useRef<HTMLDivElement>(null);
++
++    // Auto-scroll logic
++    useEffect(() => {
++        if (scrollRef.current) {
++            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
++        }
++    }, [events]);
+ 
+     // Simulate live incoming events
+     useEffect(() => {
+@@ -98,7 +106,8 @@
+                 message: messages[Math.floor(Math.random() * messages.length)],
+             };
+ 
+-            setEvents((prev) => [newEvent, ...prev.slice(0, 9)]);
++            // Keep the last 50 events so it doesn't grow infinitely and cause lag
++            setEvents((prev) => [...prev.slice(-50), newEvent]);
+         }, 4000);
+ 
+         return () => clearInterval(interval);
+@@ -138,10 +147,11 @@
+             >
+                 <button
+                     onClick={() => setIsLive(!isLive)}
+-                    className={`rounded-lg border px-4 py-2 text-sm font-medium transition-all ${isLive
+-                        ? 'border-cyan-400/50 bg-cyan-400/10 text-cyan-300 hover:bg-cyan-400/20'
+-                        : 'border-white/10 bg-white/5 text-gray-400 hover:bg-white/10'
+-                        }`}
++                    className={`rounded-lg border px-4 py-2 text-sm font-medium transition-all ${
++                        isLive
++                            ? 'border-cyan-400/50 bg-cyan-400/10 text-cyan-300 hover:bg-cyan-400/20'
++                            : 'border-white/10 bg-white/5 text-gray-400 hover:bg-white/10'
++                    }`}
+                 >
+                     {isLive ? '⏸ Pause Live Feed' : '▶ Resume Live Feed'}
+                 </button>
+@@ -155,16 +165,17 @@
+                         <Terminal className="h-4 w-4 text-cyan-400" strokeWidth={1.5} />
+                         <span className="text-cyan-400">threat-intel.log</span>
+                         <span className="ml-auto text-xs text-gray-500">
+-                            {events.length} / {mockThreatEvents.length + 10}
++                            {events.length} / max 50
+                         </span>
+                     </div>
+ 
+                     {/* Events */}
+-                    <div className="space-y-2 max-h-96 overflow-y-auto pt-3">
+-                        <AnimatePresence mode="popLayout">
++                    <div ref={scrollRef} className="space-y-2 max-h-96 overflow-y-auto pt-3 scroll-smooth">
++                        <AnimatePresence mode="popLayout" initial={false}>
+                             {events.map((event, idx) => {
+                                 const config = severityConfig[event.severity];
+                                 const Icon = config.icon;
++                                const isLatest = idx === events.length - 1;
+ 
+                                 return (
+                                     <motion.div
+@@ -196,11 +207,11 @@
+                                         </span>
+ 
+                                         {/* Live Indicator for latest */}
+-                                        {idx === 0 && isLive && (
++                                        {isLatest && isLive && (
+                                             <motion.div
+                                                 animate={{ opacity: [1, 0.5] }}
+                                                 transition={{ duration: 0.6, repeat: Infinity }}
+-                                                className="flex-shrink-0 h-1.5 w-1.5 rounded-full bg-red-400"
++                                                className="flex-shrink-0 h-1.5 w-1.5 rounded-full bg-red-400 mt-1"
+                                             />
+                                         )}
+                                     </motion.div>
+@@ -210,7 +221,7 @@
+                     </div>
+ 
+                     {/* Terminal Footer */}
+-                    <div className="border-t border-white/10 pt-2 text-xs text-gray-500">
++                    <div className="border-t border-white/10 pt-2 text-xs text-gray-500 mt-2">
+                         <span className="text-cyan-400">aether</span>
+                         <span className="text-white">@</span>
+                         <span className="text-green-400">nexus</span>

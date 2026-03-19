@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Terminal, AlertCircle, AlertTriangle, AlertOctagon } from 'lucide-react';
+import { Terminal, AlertCircle, AlertTriangle, AlertOctagon, Brain, Cpu } from 'lucide-react';
 import { GlassCard } from '@/components/ui/glass-card';
 import { Badge } from '@/components/ui/badge';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { PulseIndicator } from '@/components/ui/pulse-indicator';
+import { DecryptedText } from '@/components/ui/decrypted-text';
 
 interface ThreatEvent {
     id: string;
@@ -64,6 +65,14 @@ const mockThreatEvents: ThreatEvent[] = [
 export default function IntelligencePage() {
     const [events, setEvents] = useState<ThreatEvent[]>(mockThreatEvents);
     const [isLive, setIsLive] = useState(true);
+    const scrollRef = useRef<HTMLDivElement>(null);
+
+    // Auto-scroll logic
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
+    }, [events]);
 
     // Simulate live incoming events
     useEffect(() => {
@@ -97,7 +106,8 @@ export default function IntelligencePage() {
                 message: messages[Math.floor(Math.random() * messages.length)],
             };
 
-            setEvents((prev) => [newEvent, ...prev.slice(0, 9)]);
+            // Keep the last 50 events so it doesn't grow infinitely and cause lag
+            setEvents((prev) => [...prev.slice(-50), newEvent]);
         }, 4000);
 
         return () => clearInterval(interval);
@@ -137,10 +147,11 @@ export default function IntelligencePage() {
             >
                 <button
                     onClick={() => setIsLive(!isLive)}
-                    className={`rounded-lg border px-4 py-2 text-sm font-medium transition-all ${isLive
+                    className={`rounded-lg border px-4 py-2 text-sm font-medium transition-all ${
+                        isLive
                             ? 'border-cyan-400/50 bg-cyan-400/10 text-cyan-300 hover:bg-cyan-400/20'
                             : 'border-white/10 bg-white/5 text-gray-400 hover:bg-white/10'
-                        }`}
+                    }`}
                 >
                     {isLive ? '⏸ Pause Live Feed' : '▶ Resume Live Feed'}
                 </button>
@@ -154,16 +165,17 @@ export default function IntelligencePage() {
                         <Terminal className="h-4 w-4 text-cyan-400" strokeWidth={1.5} />
                         <span className="text-cyan-400">threat-intel.log</span>
                         <span className="ml-auto text-xs text-gray-500">
-                            {events.length} / {mockThreatEvents.length + 10}
+                            {events.length} / max 50
                         </span>
                     </div>
 
                     {/* Events */}
-                    <div className="space-y-2 max-h-96 overflow-y-auto pt-3">
-                        <AnimatePresence mode="popLayout">
+                    <div ref={scrollRef} className="space-y-2 max-h-96 overflow-y-auto pt-3 scroll-smooth">
+                        <AnimatePresence mode="popLayout" initial={false}>
                             {events.map((event, idx) => {
                                 const config = severityConfig[event.severity];
                                 const Icon = config.icon;
+                                const isLatest = idx === events.length - 1;
 
                                 return (
                                     <motion.div
@@ -190,16 +202,16 @@ export default function IntelligencePage() {
                                         </Badge>
 
                                         {/* Message */}
-                                        <span className="flex-1 text-gray-300 break-all">
-                                            {event.message}
+                                        <span className="flex-1 text-gray-300 break-all font-mono">
+                                            <DecryptedText text={event.message} duration={1000} speed={40} />
                                         </span>
 
                                         {/* Live Indicator for latest */}
-                                        {idx === 0 && isLive && (
+                                        {isLatest && isLive && (
                                             <motion.div
                                                 animate={{ opacity: [1, 0.5] }}
                                                 transition={{ duration: 0.6, repeat: Infinity }}
-                                                className="flex-shrink-0 h-1.5 w-1.5 rounded-full bg-red-400"
+                                                className="flex-shrink-0 h-1.5 w-1.5 rounded-full bg-red-400 mt-1"
                                             />
                                         )}
                                     </motion.div>
@@ -209,7 +221,7 @@ export default function IntelligencePage() {
                     </div>
 
                     {/* Terminal Footer */}
-                    <div className="border-t border-white/10 pt-2 text-xs text-gray-500">
+                    <div className="border-t border-white/10 pt-2 text-xs text-gray-500 mt-2">
                         <span className="text-cyan-400">aether</span>
                         <span className="text-white">@</span>
                         <span className="text-green-400">nexus</span>
@@ -240,6 +252,67 @@ export default function IntelligencePage() {
                         <div className="text-xs text-gray-400">{stat.label}</div>
                     </motion.div>
                 ))}
+            </div>
+
+            {/* Agent Memory & Autonomous Actions Framework */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-4 pb-8">
+                {/* Short-Term Memory State */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                >
+                    <GlassCard className="h-full">
+                        <div className="flex items-center gap-2 border-b border-white/10 pb-3 mb-4">
+                            <Brain className="h-5 w-5 text-cyan-400" />
+                            <h3 className="font-semibold text-white">Agent Context Memory</h3>
+                            <Badge color="info" className="ml-auto">Synced</Badge>
+                        </div>
+                        <div className="space-y-3 font-mono text-xs">
+                            <div className="bg-white/5 p-3 rounded border border-white/10">
+                                <div className="text-gray-500 mb-1">// Active Trace Route</div>
+                                <div className="text-cyan-300">Target IP: <span className="text-white">192.168.1.104</span></div>
+                                <div className="text-cyan-300">Confidence Score: <span className="text-orange-400">89% Malicious</span></div>
+                            </div>
+                            <div className="bg-white/5 p-3 rounded border border-white/10">
+                                <div className="text-gray-500 mb-1">// Token Vault Status</div>
+                                <div className="text-cyan-300">Stored Identity: <span className="text-white">GitHub OAuth (id: gh_12...9)</span></div>
+                                <div className="text-cyan-300">Observation: <span className="text-green-400">Behavior matches baseline</span></div>
+                            </div>
+                        </div>
+                    </GlassCard>
+                </motion.div>
+
+                {/* Autonomous Remediation Actions */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                >
+                    <GlassCard className="h-full" glow="orange">
+                        <div className="flex items-center gap-2 border-b border-white/10 pb-3 mb-4">
+                            <Cpu className="h-5 w-5 text-orange-400" />
+                            <h3 className="font-semibold text-white">Autonomous Remediation</h3>
+                            <PulseIndicator color="orange" size="sm" animated />
+                        </div>
+                        <div className="space-y-4 text-sm">
+                            <div className="border-l-2 border-orange-500 pl-3 py-1">
+                                <div className="flex justify-between items-start mb-1">
+                                    <span className="font-bold text-white">Revoked GitHub Token</span>
+                                    <span className="text-gray-500 font-mono text-xs">2m ago</span>
+                                </div>
+                                <p className="text-gray-400 text-xs">Agent autonomously purged Token Vault ID `gh_***` after detecting off-hours clone activity via cross-domain telemetry.</p>
+                            </div>
+                            <div className="border-l-2 border-cyan-500 pl-3 py-1">
+                                <div className="flex justify-between items-start mb-1">
+                                    <span className="font-bold text-white">Dynamic Step-Up Triggered</span>
+                                    <span className="text-gray-500 font-mono text-xs">15m ago</span>
+                                </div>
+                                <p className="text-gray-400 text-xs">Agent enforced WebAuthn challenge for user `direwolfe` based on impossible travel velocity (NYC to LDN).</p>
+                            </div>
+                        </div>
+                    </GlassCard>
+                </motion.div>
             </div>
         </div>
     );

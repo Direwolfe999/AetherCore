@@ -1,0 +1,62 @@
+import { Brain, Cpu } from 'lucide-react';
+... (add underneath Stats grid)
+            {/* Agent Memory & Autonomous Actions Framework */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-4">
+                {/* Short-Term Memory State */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                >
+                    <GlassCard className="h-full">
+                        <div className="flex items-center gap-2 border-b border-white/10 pb-3 mb-4">
+                            <Brain className="h-5 w-5 text-cyan-400" />
+                            <h3 className="font-semibold text-white">Agent Context Memory</h3>
+                            <Badge color="info" className="ml-auto">Synced</Badge>
+                        </div>
+                        <div className="space-y-3 font-mono text-xs">
+                            <div className="bg-white/5 p-3 rounded border border-white/10">
+                                <div className="text-gray-500 mb-1">// Active Trace Route</div>
+                                <div className="text-cyan-300">Target IP: <span className="text-white">192.168.1.104</span></div>
+                                <div className="text-cyan-300">Confidence Score: <span className="text-orange-400">89% Malicious</span></div>
+                            </div>
+                            <div className="bg-white/5 p-3 rounded border border-white/10">
+                                <div className="text-gray-500 mb-1">// Token Vault Status</div>
+                                <div className="text-cyan-300">Stored Identity: <span className="text-white">GitHub OAuth (id: gh_12...9)</span></div>
+                                <div className="text-cyan-300">Observation: <span className="text-green-400">Behavior matches baseline</span></div>
+                            </div>
+                        </div>
+                    </GlassCard>
+                </motion.div>
+
+                {/* Autonomous Remediation Actions */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                >
+                    <GlassCard className="h-full" glow="orange">
+                        <div className="flex items-center gap-2 border-b border-white/10 pb-3 mb-4">
+                            <Cpu className="h-5 w-5 text-orange-400" />
+                            <h3 className="font-semibold text-white">Autonomous Remediation</h3>
+                            <PulseIndicator color="orange" size="sm" animated />
+                        </div>
+                        <div className="space-y-4 text-sm">
+                            <div className="border-l-2 border-orange-500 pl-3 py-1">
+                                <div className="flex justify-between items-start mb-1">
+                                    <span className="font-bold text-white">Revoked GitHub Token</span>
+                                    <span className="text-gray-500 font-mono text-xs">2m ago</span>
+                                </div>
+                                <p className="text-gray-400 text-xs">Agent autonomously purged Token Vault ID `gh_***` after detecting off-hours clone activity via cross-domain telemetry.</p>
+                            </div>
+                            <div className="border-l-2 border-cyan-500 pl-3 py-1">
+                                <div className="flex justify-between items-start mb-1">
+                                    <span className="font-bold text-white">Dynamic Step-Up Triggered</span>
+                                    <span className="text-gray-500 font-mono text-xs">15m ago</span>
+                                </div>
+                                <p className="text-gray-400 text-xs">Agent enforced WebAuthn challenge for user `direwolfe` based on impossible travel velocity (NYC to LDN).</p>
+                            </div>
+                        </div>
+                    </GlassCard>
+                </motion.div>
+            </div>

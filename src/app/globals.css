@@ -16,6 +16,57 @@ body {
   color: white;
 }
 
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Custom Cyber Scrollbar for the rest of the application */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.4);
+  border-left: 1px solid rgba(0, 240, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-cyan);
+  border-radius: 4px;
+  box-shadow: inset 0 0 4px rgba(0, 240, 255, 0.8);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00ffff;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 1);
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+.animate-\\[slide_2s_infinite_linear\\] {
+  animation: slide 2s infinite linear;
+}
+.animate-\\[slide_3s_infinite_linear\\] {
+  animation: slide 3s infinite linear;
+}
+.animate-\\[slide_4s_infinite_linear\\] {
+  animation: slide 4s infinite linear;
+}
+
 body {
   min-height: 100vh;
   background-image:
@@ -94,5 +145,38 @@ body {
     box-shadow:
       0 0 0 rgb(0 240 255 / 0.28),
       0 0 40px rgb(0 240 255 / 0.4);
+  }
+}
+
+/* Cyber Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-left: 1px solid rgba(0, 240, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 240, 255, 0.5);
+  border-radius: 4px;
+  box-shadow: inset 0 0 6px rgba(0, 240, 255, 0.8);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 240, 255, 0.8);
+}
+
+@layer utilities {
+  .animate-scanline {
+    animation: scanline 8s linear infinite;
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
   }
 }

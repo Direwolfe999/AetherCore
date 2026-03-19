@@ -6,6 +6,8 @@ import {
     Zap,
     Lock,
     ShieldAlert,
+    Volume2,
+    VolumeX
 } from 'lucide-react';
 import { useAuthState } from '@/hooks/use-auth-state';
 
@@ -13,6 +15,7 @@ export function SystemStatusBar() {
     const { session } = useAuthState();
     const [mojoActive, setMojoActive] = useState(true);
     const [panicMode, setPanicMode] = useState(false);
+    const [audioEnabled, setAudioEnabled] = useState(false);
 
     // Simulate Mojo pulse animation
     useEffect(() => {
@@ -22,11 +25,30 @@ export function SystemStatusBar() {
         return () => clearInterval(interval);
     }, []);
 
+    const toggleAudio = () => {
+        const next = !audioEnabled;
+        setAudioEnabled(next);
+        
+        // Setup simple persistent global trigger we can listen to elsewhere
+        if (typeof window !== 'undefined') {
+            window.sessionStorage.setItem('aether_audio', next ? '1' : '0');
+            
+            // Dummy Audio context init to break browser silence policy on click
+            if (next) {
+                try {
+                    const Ctx = window.AudioContext || (window as any).webkitAudioContext;
+                    const ctx = new Ctx();
+                    ctx.resume();
+                } catch(e) {}
+            }
+        }
+    };
+
     // Get user initials for avatar
     const getUserInitials = () => {
         if (session?.user) {
             const name = session.user.name || 'User';
-            return name.split(' ').map(n => n[0]).join('').toUpperCase();
+            return name.split(' ').map((n: string) => n[0]).join('').toUpperCase();
         }
         return '?';
     };
@@ -56,12 +78,21 @@ export function SystemStatusBar() {
                 </div>
 
                 {/* Center: Title (hidden on mobile) */}
-                <div className="hidden sm:block">
-                    <h1 className="text-sm font-semibold text-white">AetherCore</h1>
+                <div className="hidden sm:flex sm:items-center sm:justify-center absolute left-1/2 -translate-x-1/2 h-full w-48">
+                    <img src="/logo-word.png" alt="AetherCore" className="w-full h-full object-contain" style={{ transform: 'scale(2.0)' }} />
                 </div>
 
                 {/* Right: User Avatar + Panic Button */}
                 <div className="flex items-center gap-3">
+                    
+                    <button 
+                        onClick={toggleAudio}
+                        className="text-white/50 hover:text-cyan-400 transition-colors mr-2"
+                        title={audioEnabled ? "Audio Enabled" : "Audio Muted"}
+                    >
+                        {audioEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                    </button>
+
                     {/* User Avatar */}
                     <motion.div
                         whileHover={{ scale: 1.05 }}

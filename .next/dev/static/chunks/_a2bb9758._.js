@@ -271,6 +271,8 @@ function VaultPage() {
     _s();
     const [rotatingKey, setRotatingKey] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [keyInSafe, setKeyInSafe] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [isDragging, setIsDragging] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [tokensInSafe, setTokensInSafe] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(0);
     const handleRotateKey = (id)=>{
         setRotatingKey(id);
         // Simulate key moving into safe
@@ -282,6 +284,26 @@ function VaultPage() {
             }, 1000);
         }, 600);
     };
+    const handleDragStart = (e)=>{
+        e.dataTransfer.setData('text/plain', 'token');
+    };
+    const handleDragOver = (e)=>{
+        e.preventDefault();
+        setIsDragging(true);
+    };
+    const handleDragLeave = ()=>{
+        setIsDragging(false);
+    };
+    const handleDrop = (e)=>{
+        e.preventDefault();
+        setIsDragging(false);
+        const data = e.dataTransfer.getData('text/plain');
+        if (data === 'token') {
+            setTokensInSafe((prev)=>prev + 1);
+            setKeyInSafe(true);
+            setTimeout(()=>setKeyInSafe(false), 800);
+        }
+    };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "space-y-8",
         children: [
@@ -291,120 +313,217 @@ function VaultPage() {
                 children: "Secure Perimeter"
             }, void 0, false, {
                 fileName: "[project]/src/app/vault/page.tsx",
-                lineNumber: 56,
+                lineNumber: 82,
                 columnNumber: 13
             }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
-                initial: {
-                    opacity: 0,
-                    scale: 0.9
-                },
-                animate: {
-                    opacity: 1,
-                    scale: 1
-                },
-                transition: {
-                    delay: 0.2
-                },
-                className: "flex flex-col items-center justify-center",
-                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$glass$2d$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["GlassCard"], {
-                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "flex flex-col items-center justify-center gap-6 py-12",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "relative h-32 w-32",
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "grid grid-cols-1 md:grid-cols-2 gap-8 items-center",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
+                        initial: {
+                            opacity: 0,
+                            scale: 0.9
+                        },
+                        animate: {
+                            opacity: 1,
+                            scale: 1
+                        },
+                        transition: {
+                            delay: 0.2
+                        },
+                        className: "flex flex-col items-center justify-center h-full w-full",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$glass$2d$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["GlassCard"], {
+                            className: "w-full",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: `flex flex-col items-center justify-center gap-6 py-12 rounded-2xl transition-all duration-300 ${isDragging ? 'bg-cyan-500/10 scale-105 border-cyan-400' : ''}`,
+                                onDragOver: handleDragOver,
+                                onDragLeave: handleDragLeave,
+                                onDrop: handleDrop,
                                 children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
-                                        animate: {
-                                            rotate: keyInSafe ? 0 : -5
-                                        },
-                                        className: "absolute inset-0 flex items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500/10 to-orange-500/10 border-2 border-cyan-400/30",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$vault$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Vault$3e$__["Vault"], {
-                                            className: "h-16 w-16 text-cyan-400",
-                                            strokeWidth: 1.5
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/app/vault/page.tsx",
-                                            lineNumber: 76,
-                                            columnNumber: 33
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/app/vault/page.tsx",
-                                        lineNumber: 72,
-                                        columnNumber: 29
-                                    }, this),
-                                    rotatingKey && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
-                                        animate: {
-                                            x: keyInSafe ? 0 : 100,
-                                            y: keyInSafe ? 0 : -50,
-                                            rotate: keyInSafe ? 0 : 360,
-                                            opacity: keyInSafe ? 0 : 1
-                                        },
-                                        transition: {
-                                            duration: 0.8
-                                        },
-                                        className: "absolute inset-0 flex items-center justify-center",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$key$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Key$3e$__["Key"], {
-                                            className: "h-12 w-12 text-orange-400",
-                                            strokeWidth: 1.5
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/app/vault/page.tsx",
-                                            lineNumber: 91,
-                                            columnNumber: 37
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/app/vault/page.tsx",
-                                        lineNumber: 81,
-                                        columnNumber: 33
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/src/app/vault/page.tsx",
-                                lineNumber: 70,
-                                columnNumber: 25
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "text-center",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                                        className: "text-2xl font-bold text-white mb-2",
-                                        children: "Token Vault"
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/app/vault/page.tsx",
-                                        lineNumber: 97,
-                                        columnNumber: 29
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "text-sm text-gray-400",
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "relative h-32 w-32",
                                         children: [
-                                            accounts.length,
-                                            " connected ",
-                                            accounts.length === 1 ? 'account' : 'accounts'
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
+                                                animate: {
+                                                    rotate: keyInSafe ? 0 : -5,
+                                                    scale: keyInSafe ? 1.1 : 1
+                                                },
+                                                className: `absolute inset-0 flex items-center justify-center rounded-2xl border-2 transition-colors ${keyInSafe ? 'bg-green-500/20 border-green-400' : 'bg-gradient-to-br from-cyan-500/10 to-orange-500/10 border-cyan-400/30'}`,
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$vault$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Vault$3e$__["Vault"], {
+                                                    className: `h-16 w-16 ${keyInSafe ? 'text-green-400' : 'text-cyan-400'}`,
+                                                    strokeWidth: 1.5
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/vault/page.tsx",
+                                                    lineNumber: 112,
+                                                    columnNumber: 37
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/vault/page.tsx",
+                                                lineNumber: 104,
+                                                columnNumber: 33
+                                            }, this),
+                                            rotatingKey && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
+                                                animate: {
+                                                    x: keyInSafe ? 0 : 100,
+                                                    y: keyInSafe ? 0 : -50,
+                                                    rotate: keyInSafe ? 0 : 360,
+                                                    opacity: keyInSafe ? 0 : 1
+                                                },
+                                                transition: {
+                                                    duration: 0.8
+                                                },
+                                                className: "absolute inset-0 flex items-center justify-center",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$key$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Key$3e$__["Key"], {
+                                                    className: "h-12 w-12 text-orange-400",
+                                                    strokeWidth: 1.5
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/vault/page.tsx",
+                                                    lineNumber: 127,
+                                                    columnNumber: 41
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/vault/page.tsx",
+                                                lineNumber: 117,
+                                                columnNumber: 37
+                                            }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/vault/page.tsx",
-                                        lineNumber: 98,
+                                        lineNumber: 102,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "text-center",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                                className: "text-2xl font-bold text-white mb-2",
+                                                children: "Token Vault"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/vault/page.tsx",
+                                                lineNumber: 133,
+                                                columnNumber: 33
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-sm text-gray-400 mb-2",
+                                                children: [
+                                                    accounts.length + tokensInSafe,
+                                                    " secured ",
+                                                    accounts.length + tokensInSafe === 1 ? 'credential' : 'credentials'
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/vault/page.tsx",
+                                                lineNumber: 134,
+                                                columnNumber: 33
+                                            }, this),
+                                            isDragging && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
+                                                color: "info",
+                                                className: "text-cyan-400 animate-pulse",
+                                                children: "Release to Encrypt"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/vault/page.tsx",
+                                                lineNumber: 138,
+                                                columnNumber: 37
+                                            }, this),
+                                            !isDragging && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "text-xs text-zinc-500",
+                                                children: "Drag tokens here to encrypt"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/vault/page.tsx",
+                                                lineNumber: 141,
+                                                columnNumber: 37
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/vault/page.tsx",
+                                        lineNumber: 132,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/vault/page.tsx",
-                                lineNumber: 96,
+                                lineNumber: 95,
                                 columnNumber: 25
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/vault/page.tsx",
+                            lineNumber: 94,
+                            columnNumber: 21
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/vault/page.tsx",
+                        lineNumber: 88,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex flex-col gap-4",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "text-sm font-semibold text-white/70",
+                                children: "Unsecured Tokens (Draggable)"
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/vault/page.tsx",
+                                lineNumber: 150,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                draggable: true,
+                                onDragStart: handleDragStart,
+                                className: "p-4 rounded-xl border border-white/10 bg-white/5 backdrop-blur flex items-center gap-4 cursor-grab active:cursor-grabbing hover:bg-white/10 transition-colors",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "p-3 rounded-lg bg-orange-500/20 border border-orange-500/30",
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$key$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Key$3e$__["Key"], {
+                                            className: "w-6 h-6 text-orange-400"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/vault/page.tsx",
+                                            lineNumber: 157,
+                                            columnNumber: 29
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/vault/page.tsx",
+                                        lineNumber: 156,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-sm font-semibold text-white",
+                                                children: "Legacy API Key"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/vault/page.tsx",
+                                                lineNumber: 160,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-xs text-white/50",
+                                                children: "Needs Vault Security"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/vault/page.tsx",
+                                                lineNumber: 161,
+                                                columnNumber: 29
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/vault/page.tsx",
+                                        lineNumber: 159,
+                                        columnNumber: 25
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/app/vault/page.tsx",
+                                lineNumber: 151,
+                                columnNumber: 21
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/vault/page.tsx",
-                        lineNumber: 68,
-                        columnNumber: 21
+                        lineNumber: 149,
+                        columnNumber: 17
                     }, this)
-                }, void 0, false, {
-                    fileName: "[project]/src/app/vault/page.tsx",
-                    lineNumber: 67,
-                    columnNumber: 17
-                }, this)
-            }, void 0, false, {
+                ]
+            }, void 0, true, {
                 fileName: "[project]/src/app/vault/page.tsx",
-                lineNumber: 61,
+                lineNumber: 87,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -418,14 +537,14 @@ function VaultPage() {
                                 strokeWidth: 1.5
                             }, void 0, false, {
                                 fileName: "[project]/src/app/vault/page.tsx",
-                                lineNumber: 109,
+                                lineNumber: 170,
                                 columnNumber: 21
                             }, this),
                             "Connected Accounts"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/vault/page.tsx",
-                        lineNumber: 108,
+                        lineNumber: 169,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -461,12 +580,12 @@ function VaultPage() {
                                                                     className: "h-6 w-6 text-cyan-400"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/vault/page.tsx",
-                                                                    lineNumber: 129,
+                                                                    lineNumber: 190,
                                                                     columnNumber: 53
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/vault/page.tsx",
-                                                                lineNumber: 128,
+                                                                lineNumber: 189,
                                                                 columnNumber: 49
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -476,7 +595,7 @@ function VaultPage() {
                                                                         children: account.provider
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/vault/page.tsx",
-                                                                        lineNumber: 132,
+                                                                        lineNumber: 193,
                                                                         columnNumber: 53
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -484,19 +603,19 @@ function VaultPage() {
                                                                         children: account.email
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/vault/page.tsx",
-                                                                        lineNumber: 135,
+                                                                        lineNumber: 196,
                                                                         columnNumber: 53
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/vault/page.tsx",
-                                                                lineNumber: 131,
+                                                                lineNumber: 192,
                                                                 columnNumber: 49
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/vault/page.tsx",
-                                                        lineNumber: 127,
+                                                        lineNumber: 188,
                                                         columnNumber: 45
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -504,20 +623,20 @@ function VaultPage() {
                                                         children: "Connected"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/vault/page.tsx",
-                                                        lineNumber: 138,
+                                                        lineNumber: 199,
                                                         columnNumber: 45
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/vault/page.tsx",
-                                                lineNumber: 126,
+                                                lineNumber: 187,
                                                 columnNumber: 41
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "border-t border-white/10"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/vault/page.tsx",
-                                                lineNumber: 142,
+                                                lineNumber: 203,
                                                 columnNumber: 41
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -531,7 +650,7 @@ function VaultPage() {
                                                                 children: "Last Rotated"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/vault/page.tsx",
-                                                                lineNumber: 147,
+                                                                lineNumber: 208,
                                                                 columnNumber: 49
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -539,13 +658,13 @@ function VaultPage() {
                                                                 children: account.lastRotated
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/vault/page.tsx",
-                                                                lineNumber: 148,
+                                                                lineNumber: 209,
                                                                 columnNumber: 49
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/vault/page.tsx",
-                                                        lineNumber: 146,
+                                                        lineNumber: 207,
                                                         columnNumber: 45
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -556,7 +675,7 @@ function VaultPage() {
                                                                 children: "Encryption"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/vault/page.tsx",
-                                                                lineNumber: 152,
+                                                                lineNumber: 213,
                                                                 columnNumber: 49
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -567,7 +686,7 @@ function VaultPage() {
                                                                         children: "AES-256"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/vault/page.tsx",
-                                                                        lineNumber: 154,
+                                                                        lineNumber: 215,
                                                                         columnNumber: 53
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$pulse$2d$indicator$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PulseIndicator"], {
@@ -576,19 +695,19 @@ function VaultPage() {
                                                                         animated: true
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/vault/page.tsx",
-                                                                        lineNumber: 155,
+                                                                        lineNumber: 216,
                                                                         columnNumber: 53
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/vault/page.tsx",
-                                                                lineNumber: 153,
+                                                                lineNumber: 214,
                                                                 columnNumber: 49
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/vault/page.tsx",
-                                                        lineNumber: 151,
+                                                        lineNumber: 212,
                                                         columnNumber: 45
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -599,7 +718,7 @@ function VaultPage() {
                                                                 strokeWidth: 1.5
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/vault/page.tsx",
-                                                                lineNumber: 161,
+                                                                lineNumber: 222,
                                                                 columnNumber: 49
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -607,19 +726,19 @@ function VaultPage() {
                                                                 children: "Secured by Auth0"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/vault/page.tsx",
-                                                                lineNumber: 162,
+                                                                lineNumber: 223,
                                                                 columnNumber: 49
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/vault/page.tsx",
-                                                        lineNumber: 160,
+                                                        lineNumber: 221,
                                                         columnNumber: 45
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/vault/page.tsx",
-                                                lineNumber: 145,
+                                                lineNumber: 206,
                                                 columnNumber: 41
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -637,14 +756,14 @@ function VaultPage() {
                                                                 strokeWidth: 1.5
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/vault/page.tsx",
-                                                                lineNumber: 177,
+                                                                lineNumber: 238,
                                                                 columnNumber: 49
                                                             }, this),
                                                             rotatingKey === account.id ? 'Rotating...' : 'Rotate Keys'
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/vault/page.tsx",
-                                                        lineNumber: 170,
+                                                        lineNumber: 231,
                                                         columnNumber: 45
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$glass$2d$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["GlassButton"], {
@@ -657,48 +776,48 @@ function VaultPage() {
                                                                 strokeWidth: 1.5
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/vault/page.tsx",
-                                                                lineNumber: 185,
+                                                                lineNumber: 246,
                                                                 columnNumber: 49
                                                             }, this),
                                                             "Disconnect"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/vault/page.tsx",
-                                                        lineNumber: 180,
+                                                        lineNumber: 241,
                                                         columnNumber: 45
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/vault/page.tsx",
-                                                lineNumber: 169,
+                                                lineNumber: 230,
                                                 columnNumber: 41
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/vault/page.tsx",
-                                        lineNumber: 124,
+                                        lineNumber: 185,
                                         columnNumber: 37
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/vault/page.tsx",
-                                    lineNumber: 123,
+                                    lineNumber: 184,
                                     columnNumber: 33
                                 }, this)
                             }, account.id, false, {
                                 fileName: "[project]/src/app/vault/page.tsx",
-                                lineNumber: 117,
+                                lineNumber: 178,
                                 columnNumber: 29
                             }, this);
                         })
                     }, void 0, false, {
                         fileName: "[project]/src/app/vault/page.tsx",
-                        lineNumber: 113,
+                        lineNumber: 174,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/vault/page.tsx",
-                lineNumber: 107,
+                lineNumber: 168,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -725,14 +844,14 @@ function VaultPage() {
                                         strokeWidth: 1.5
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/vault/page.tsx",
-                                        lineNumber: 206,
+                                        lineNumber: 267,
                                         columnNumber: 29
                                     }, this),
                                     "Security Standards"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/vault/page.tsx",
-                                lineNumber: 205,
+                                lineNumber: 266,
                                 columnNumber: 25
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -745,14 +864,14 @@ function VaultPage() {
                                                 className: "h-1.5 w-1.5 rounded-full bg-cyan-400"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/vault/page.tsx",
-                                                lineNumber: 211,
+                                                lineNumber: 272,
                                                 columnNumber: 33
                                             }, this),
                                             "All tokens encrypted using AES-256"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/vault/page.tsx",
-                                        lineNumber: 210,
+                                        lineNumber: 271,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -762,14 +881,14 @@ function VaultPage() {
                                                 className: "h-1.5 w-1.5 rounded-full bg-cyan-400"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/vault/page.tsx",
-                                                lineNumber: 215,
+                                                lineNumber: 276,
                                                 columnNumber: 33
                                             }, this),
                                             "Auth0 OAuth2.0 compliance"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/vault/page.tsx",
-                                        lineNumber: 214,
+                                        lineNumber: 275,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -779,14 +898,14 @@ function VaultPage() {
                                                 className: "h-1.5 w-1.5 rounded-full bg-cyan-400"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/vault/page.tsx",
-                                                lineNumber: 219,
+                                                lineNumber: 280,
                                                 columnNumber: 33
                                             }, this),
                                             "Automatic key rotation every 30 days"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/vault/page.tsx",
-                                        lineNumber: 218,
+                                        lineNumber: 279,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -796,46 +915,46 @@ function VaultPage() {
                                                 className: "h-1.5 w-1.5 rounded-full bg-cyan-400"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/vault/page.tsx",
-                                                lineNumber: 223,
+                                                lineNumber: 284,
                                                 columnNumber: 33
                                             }, this),
                                             "Zero-knowledge architecture"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/vault/page.tsx",
-                                        lineNumber: 222,
+                                        lineNumber: 283,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/vault/page.tsx",
-                                lineNumber: 209,
+                                lineNumber: 270,
                                 columnNumber: 25
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/vault/page.tsx",
-                        lineNumber: 204,
+                        lineNumber: 265,
                         columnNumber: 21
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/vault/page.tsx",
-                    lineNumber: 203,
+                    lineNumber: 264,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/vault/page.tsx",
-                lineNumber: 198,
+                lineNumber: 259,
                 columnNumber: 13
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/vault/page.tsx",
-        lineNumber: 54,
+        lineNumber: 80,
         columnNumber: 9
     }, this);
 }
-_s(VaultPage, "a2FVcAC0fH/gsg2FAf2HJDEzjyo=");
+_s(VaultPage, "owt3a4YKwAx9jkt0fMt61oBVHnU=");
 _c = VaultPage;
 var _c;
 __turbopack_context__.k.register(_c, "VaultPage");

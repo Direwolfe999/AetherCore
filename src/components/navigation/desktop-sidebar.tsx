@@ -11,6 +11,9 @@ import {
     Settings,
     ChevronLeft,
     ChevronRight,
+    BrainCircuit,
+    Network,
+    Radar,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -29,10 +32,28 @@ const navItems: NavItem[] = [
         label: 'Dashboard',
     },
     {
+        name: 'Reasoning',
+        path: '/reasoning',
+        icon: BrainCircuit,
+        label: 'XAI Trace',
+    },
+    {
         name: 'Vault',
         path: '/vault',
         icon: ShieldCheck,
         label: 'Token Vault',
+    },
+    {
+        name: 'Governance',
+        path: '/governance',
+        icon: Network,
+        label: 'Identity Map',
+    },
+    {
+        name: 'Radar',
+        path: '/radar',
+        icon: Radar,
+        label: 'Anomalies',
     },
     {
         name: 'Intelligence',
@@ -71,13 +92,24 @@ export function DesktopSidebar() {
         >
             {/* Header Logo */}
             <div className="flex items-center justify-center border-b border-white/10 px-4 py-6">
-                <motion.div
-                    initial={{ scale: 1 }}
-                    whileHover={{ scale: 1.1 }}
-                    className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500/20 to-orange-500/20 text-lg font-bold text-cyan-400"
-                >
-                    Æ
-                </motion.div>
+                <Link href="/">
+                    {isExpanded ? (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <img src="/logo-word.png" alt="AetherCore Logo" className="h-8 object-contain" />
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            initial={{ scale: 1 }}
+                            whileHover={{ scale: 1.1 }}
+                        >
+                            <img src="/logo-nobg.png" alt="AetherCore Logo" className="h-10 w-10 object-contain" />
+                        </motion.div>
+                    )}
+                </Link>
             </div>
 
             {/* Navigation Items */}

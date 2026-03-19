@@ -61,7 +61,7 @@ export function SystemStatusGrid() {
             index: 0,
         },
         {
-            label: 'System Activity',
+            label: 'Auth0 Telemetry',
             value: '98',
             unit: '%',
             icon: Activity,

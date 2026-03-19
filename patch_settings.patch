@@ -1,0 +1,72 @@
+--- src/app/settings/page.tsx
++++ src/app/settings/page.tsx
+@@ -7,9 +7,10 @@
+     Zap,
+     Code,
+     ChevronRight,
+     X,
++    Fingerprint,
+ } from 'lucide-react';
+ import { GlassCard } from '@/components/ui/glass-card';
+ import { SectionHeading } from '@/components/ui/section-heading';
+ import { Badge } from '@/components/ui/badge';
+@@ -21,8 +22,9 @@
+     icon: React.ComponentType<{ className?: string }>;
+     enabled: boolean;
+     color: 'cyan' | 'orange' | 'green';
++    badge?: string;
+ }
+ 
+ interface MojoLog {
+     timestamp: string;
+@@ -48,22 +50,38 @@
+             description: 'Automatically block suspicious activities',
+             icon: ShieldOff,
+             enabled: true,
+             color: 'cyan',
++            badge: 'Auth0 Action',
+         },
+         {
+             id: 'background-monitoring',
+             title: 'Background Monitoring',
+             description: 'Monitor security threats in the background',
+             icon: Eye,
+             enabled: true,
+             color: 'orange',
+         },
++        {
++            id: 'geo-fencing',
++            title: 'Geo-Fencing',
++            description: 'Block impossible travel via Auth0 Actions',
++            icon: Zap,
++            enabled: true,
++            color: 'green',
++            badge: 'Auth0 Action',
++        },
++        {
++            id: 'biometric-mfa',
++            title: 'Biometric WebAuthn',
++            description: 'Require FaceID/TouchID for Vault access step-up',
++            icon: Fingerprint,
++            enabled: true,
++            color: 'cyan',
++            badge: 'Auth0 MFA',
++        },
+         {
+             id: 'identity-obfuscation',
+             title: 'Identity Obfuscation',
+             description: 'Hide your digital footprint with obfuscation',
+-            icon: Zap,
++            icon: Eye,
+             enabled: false,
+             color: 'green',
+         },
+@@ -194,8 +212,8 @@
+                                             </motion.div>
+ 
+                                             <div className="flex-1">
+-                                                <h3 className="font-semibold text-white">{setting.title}</h3>
++                                                <h3 className="font-semibold text-white flex items-center gap-2">{setting.title} {setting.badge && <Badge color="info" className="text-[10px] py-0">{setting.badge}</Badge>}</h3>
+                                                 <p className="text-sm text-gray-400">{setting.description}</p>
+                                             </div>
+                                         </div>

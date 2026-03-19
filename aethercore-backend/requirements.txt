@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+auth0-python
+python-jose
+httpx
+pydantic
+pydantic-settings
