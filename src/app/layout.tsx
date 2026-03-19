@@ -8,7 +8,7 @@ import { MobileBottomDock } from "@/components/navigation/mobile-bottom-dock";
 import { CommandPalette } from "@/components/navigation/command-palette";
 import { GlobalBootManager } from "@/components/ui/global-boot-manager";
 import { Toaster } from "sonner";
-import { Auth0Provider as UserProvider } from '@auth0/nextjs-auth0';
+import { UserProvider } from '@auth0/nextjs-auth0/client';
 import { Suspense } from "react";
 import "./globals.css";
 
