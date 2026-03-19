@@ -1,19 +1,18 @@
+cat << 'ROUTE' > src/app/api/auth/\[auth0\]/route.ts
 import { handleAuth, handleLogin, handleCallback, handleLogout, handleProfile } from '@auth0/nextjs-auth0';
 import { NextRequest } from 'next/server';
 
 export const GET = async (req: NextRequest, ctx: any) => {
-  const paramsRaw = await ctx.params;
-  const auth0 = paramsRaw.auth0;
-  
+  const auth0 = await ctx.params.auth0;
   let action = '';
+  
   if (Array.isArray(auth0)) {
     action = auth0[0];
   } else {
     action = auth0;
   }
   
-  console.log("AUTH ROUTE HIT:", { action, paramsRaw });
-  
+  // We recreate the ctx to be synchronous for auth0
   const syncCtx = { params: { auth0: action } };
   
   if (action === 'login') {
@@ -26,5 +25,6 @@ export const GET = async (req: NextRequest, ctx: any) => {
     return handleProfile(req, syncCtx);
   }
   
-  return new Response("Not Found Action: " + action, { status: 404 });
+  return new Response("Not Found", { status: 404 });
 };
+ROUTE
