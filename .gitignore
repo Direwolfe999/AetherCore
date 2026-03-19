@@ -12,3 +12,9 @@ node_modules
 out
 build
 dist
+
+# Python Backend
+**/__pycache__/
+**/.venv/
+venv/
+*.pyc
