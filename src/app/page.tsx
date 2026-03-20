@@ -174,7 +174,7 @@ export default function Home() {
                         Join operators worldwide who trust AetherCore to protect their digital lives.
                     </p>
                     <GlassButton variant="primary" size="lg" onClick={login} className="shimmer-button glow-cyan">
-                        Start Free Trial
+                        Start Session
                         <ArrowRight className="w-5 h-5 icon-thin" strokeWidth={1.5} />
                     </GlassButton>
                 </div>

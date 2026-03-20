@@ -46,7 +46,7 @@ The application will be available at: **http://localhost:3000**
 2. **"Connect via Auth0" Button** (with shimmer effect) - Click to authenticate
 3. **System Status Cards** - Shows live metrics (static demo data)
 4. **Feature Cards** - Hover for glow effect
-5. **"Start Free Trial" CTA** - Secondary action
+5. **"Start Session" CTA** - Secondary action
 
 ### Dashboard
 1. **System Status Grid** - 4 metric cards with scan-line animation
