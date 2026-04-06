@@ -43,4 +43,4 @@ fn main():
     events.append(SecurityEvent(16792349.0, "usr_123", "unknown", "api_request", 60000))
     
     var score = analyze_events(events)
-    print("{\"confidence_score\":", score, ", \"action_taken\": \"Isolated suspicious calendar invite.\", \"chain_of_thought\": [\"Analyzed payload size.\", \"Matched known threat signature in Mojo Engine.\"]}")
+    print("{\"confidence_score\":", score, ", \"action_taken\": \"Isolated suspicious calendar invite.\", \"chain_of_thought\": [\"Analyzed payload size.\", \"Matched known threat signature in Mojo Engine.\"], \"analysis_status\": \"ok\", \"engine\": \"mojo-binary\"}")

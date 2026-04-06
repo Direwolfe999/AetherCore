@@ -24,12 +24,18 @@ class Settings(BaseSettings):
     auth0_permissions_claim: str = Field(default="permissions", alias="AUTH0_PERMISSIONS_CLAIM")
     auth0_client_id: str = Field(default="", alias="AUTH0_CLIENT_ID")
     auth0_client_secret: str = Field(default="", alias="AUTH0_CLIENT_SECRET")
+    auth0_m2m_client_id: str = Field(default="", alias="AUTH0_M2M_CLIENT_ID")
+    auth0_m2m_client_secret: str = Field(default="", alias="AUTH0_M2M_CLIENT_SECRET")
     google_client_id: str = Field(default="", alias="GOOGLE_CLIENT_ID")
     google_client_secret: str = Field(default="", alias="GOOGLE_CLIENT_SECRET")
     google_redirect_uri: str = Field(default="http://localhost:3000/api/oauth/google/callback", alias="GOOGLE_REDIRECT_URI")
     github_client_id: str = Field(default="", alias="GITHUB_CLIENT_ID")
     github_client_secret: str = Field(default="", alias="GITHUB_CLIENT_SECRET")
     github_redirect_uri: str = Field(default="http://localhost:3000/api/oauth/github/callback", alias="GITHUB_REDIRECT_URI")
+    redis_url: str = Field(default="redis://localhost:6379/0", alias="REDIS_URL")
+    celery_result_backend: str | None = Field(default=None, alias="CELERY_RESULT_BACKEND")
+    mojo_binary_path: str = Field(default="./engine/analyzer", alias="MOJO_BINARY_PATH")
+    mojo_timeout_seconds: float = Field(default=30.0, alias="MOJO_TIMEOUT_SECONDS")
     cors_origins: List[str] = Field(default_factory=lambda: [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
@@ -73,6 +79,15 @@ class Settings(BaseSettings):
 
     def resolved_auth0_jwks_url(self) -> str:
         return f"{self.resolved_auth0_issuer()}/.well-known/jwks.json"
+
+    def resolved_m2m_client_id(self) -> str:
+        return self.auth0_m2m_client_id or self.auth0_client_id
+
+    def resolved_m2m_client_secret(self) -> str:
+        return self.auth0_m2m_client_secret or self.auth0_client_secret
+
+    def resolved_celery_result_backend(self) -> str:
+        return self.celery_result_backend or self.redis_url
 
     def is_sqlite(self) -> bool:
         return self.database_url.startswith("sqlite")

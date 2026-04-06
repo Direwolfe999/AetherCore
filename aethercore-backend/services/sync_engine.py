@@ -3,9 +3,11 @@ import json
 import os
 import logging
 from datetime import datetime
-from typing import Optional, Dict, Any, List
+from pathlib import Path
+from typing import Dict, Any
 
-from engine.models import ThreatAnalysisResponse
+from config import get_settings
+from engine.models import MojoAnalysisInput, MojoAnalysisOutput, ThreatAnalysisResponse
 from integrations.google_client import GoogleClient
 from integrations.github_client import GitHubClient
 
@@ -19,9 +21,16 @@ class SyncEngine:
     """
     
     def __init__(self):
-        self.mojo_binary_path = os.path.join(os.path.dirname(__file__), "..", "engine", "analyzer.mojo")
+        settings = get_settings()
+        configured_path = Path(settings.mojo_binary_path)
+        if configured_path.is_absolute():
+            self.mojo_binary_path = configured_path
+        else:
+            self.mojo_binary_path = Path(__file__).resolve().parent.parent / configured_path
+        self.mojo_timeout_seconds = settings.mojo_timeout_seconds
+        self._mojo_status = "unknown"
     
-    async def run_mojo_analysis(self, data_summary: Dict[str, Any]) -> ThreatAnalysisResponse:
+    async def run_mojo_analysis(self, data_summary: Dict[str, Any] | None = None) -> ThreatAnalysisResponse:
         """
         Run Mojo analyzer on synced data for threat detection.
         Falls back to analysis without Mojo if binary unavailable.
@@ -33,21 +42,27 @@ class SyncEngine:
             ThreatAnalysisResponse with confidence score and recommendations
         """
         logger.info("Triggering Mojo Scanner for threat analysis")
+        summary = data_summary or {}
         
         try:
-            # Prepare JSON input for Mojo analyzer
-            analysis_input = json.dumps({
-                "calendar_event_count": data_summary.get("calendar_events", 0),
-                "unknown_attendee_count": data_summary.get("unknown_attendees", 0),
-                "suspicious_domains": data_summary.get("suspicious_domains", []),
-                "repo_count": data_summary.get("repos", 0),
-                "recent_deployments": data_summary.get("recent_deployments", 0),
-                "access_pattern_anomalies": data_summary.get("access_anomalies", [])
-            }).encode()
+            if not self.mojo_binary_path.exists():
+                logger.warning("Mojo binary is missing", extra={"path": str(self.mojo_binary_path)})
+                self._mojo_status = "missing_binary"
+                return self._fallback_analysis(summary)
+
+            contract_input = MojoAnalysisInput(
+                calendar_event_count=summary.get("calendar_events", 0),
+                unknown_attendee_count=summary.get("unknown_attendees", 0),
+                suspicious_domains=summary.get("suspicious_domains", []),
+                repo_count=summary.get("repos", 0),
+                recent_deployments=summary.get("recent_deployments", 0),
+                access_pattern_anomalies=summary.get("access_anomalies", []),
+            )
+            analysis_input = contract_input.model_dump_json().encode("utf-8")
             
-            # Attempt to spawn Mojo process
+            # Execute the compiled Mojo binary (not source file invocation).
             process = await asyncio.create_subprocess_exec(
-                "mojo", "run", self.mojo_binary_path,
+                str(self.mojo_binary_path),
                 stdin=asyncio.subprocess.PIPE,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE
@@ -55,27 +70,44 @@ class SyncEngine:
             
             stdout, stderr = await asyncio.wait_for(
                 process.communicate(input=analysis_input),
-                timeout=30.0
+                timeout=self.mojo_timeout_seconds
             )
             
             if process.returncode == 0:
                 try:
-                    output_json = json.loads(stdout.decode().strip())
+                    output_json = json.loads(stdout.decode("utf-8").strip())
+                    validated_output = MojoAnalysisOutput.model_validate(output_json)
+                    self._mojo_status = "healthy"
                     logger.info("Mojo analysis completed successfully")
-                    return ThreatAnalysisResponse(**output_json)
+                    return validated_output
                 except (json.JSONDecodeError, ValueError) as e:
                     logger.warning(f"Failed to parse Mojo output: {e}, using fallback")
-                    return self._fallback_analysis(data_summary)
+                    self._mojo_status = "invalid_output"
+                    return self._fallback_analysis(summary)
             else:
                 logger.warning(f"Mojo process failed: {stderr.decode()}, using fallback")
-                return self._fallback_analysis(data_summary)
+                self._mojo_status = "failed"
+                return self._fallback_analysis(summary)
                 
         except asyncio.TimeoutError:
             logger.warning("Mojo analysis timeout, using fallback")
-            return self._fallback_analysis(data_summary)
+            self._mojo_status = "timeout"
+            return self._fallback_analysis(summary)
         except Exception as e:
             logger.warning(f"Error running Mojo: {e}, using fallback")
-            return self._fallback_analysis(data_summary)
+            self._mojo_status = "error"
+            return self._fallback_analysis(summary)
+
+    async def mojo_runtime_health(self) -> Dict[str, Any]:
+        """Health report for Mojo runtime used by readiness endpoints."""
+        exists = self.mojo_binary_path.exists()
+        executable = os.access(self.mojo_binary_path, os.X_OK) if exists else False
+        return {
+            "binary_path": str(self.mojo_binary_path),
+            "exists": exists,
+            "executable": executable,
+            "status": self._mojo_status if exists else "missing_binary",
+        }
     
     def _fallback_analysis(self, data_summary: Dict[str, Any]) -> ThreatAnalysisResponse:
         """
@@ -118,7 +150,9 @@ class SyncEngine:
                 f"Detected {len(threats)} risk indicators"
             ] + threats,
             confidence_score=confidence_score,
-            action_taken=action_taken
+            action_taken=action_taken,
+            analysis_status="fallback",
+            engine="python-heuristic"
         )
     
     async def sync_google_data(self, google_token: str) -> Dict[str, Any]:

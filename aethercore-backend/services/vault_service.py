@@ -1,5 +1,4 @@
 import asyncio
-import json
 import logging
 import time
 from typing import Optional
@@ -16,8 +15,8 @@ class VaultService:
     def __init__(self):
         self.settings = get_settings()
         self.domain = self.settings.auth0_domain
-        self.m2m_client_id = self.settings.auth0_client_id
-        self.m2m_client_secret = self.settings.auth0_client_secret
+        self.m2m_client_id = self.settings.resolved_m2m_client_id()
+        self.m2m_client_secret = self.settings.resolved_m2m_client_secret()
         self._m2m_token: Optional[str] = None
         self._m2m_token_expiry: float = 0
         self._m2m_lock = asyncio.Lock()
@@ -42,6 +41,9 @@ class VaultService:
             
             logger.info("Fetching new M2M token from Auth0")
             try:
+                if not self.domain or not self.m2m_client_id or not self.m2m_client_secret:
+                    raise RuntimeError("Auth0 M2M configuration is incomplete")
+
                 async with httpx.AsyncClient() as client:
                     response = await client.post(
                         f"https://{self.domain}/oauth/token",
