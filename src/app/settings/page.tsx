@@ -123,7 +123,7 @@ export default function SettingsPage() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-black/95 backdrop-blur-md"
+                        className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-black/95 backdrop-blur-md p-4"
                     >
                         {/* Matrix cyber grid effect */}
                         <div
@@ -137,7 +137,7 @@ export default function SettingsPage() {
                         <div className="absolute inset-0 pointer-events-none" style={{ background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 0, 0.1) 2px, rgba(0, 255, 0, 0.1) 4px)" }}></div>
 
                         {/* Content */}
-                        <div className="relative z-10 flex flex-col items-center p-8">
+                        <div className="relative z-10 flex flex-col items-center p-6 sm:p-8">
                             <motion.div
                                 initial={{ scale: 0.5, opacity: 0, y: 50 }}
                                 animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -148,14 +148,14 @@ export default function SettingsPage() {
                                 }}
                                 className="text-center"
                             >
-                                <h1 className="text-4xl md:text-7xl font-black text-green-500 tracking-widest uppercase"
+                                <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-black text-green-500 tracking-widest uppercase text-center"
                                     style={{
                                         fontFamily: 'monospace',
                                         textShadow: '0 0 20px rgba(0,255,0,0.8), 0 0 40px rgba(0,255,0,0.5)'
                                     }}>
                                     HACKATHON SECURED.
                                 </h1>
-                                <h2 className="text-2xl md:text-5xl font-bold text-green-400 mt-4 tracking-widest uppercase"
+                                <h2 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold text-green-400 mt-4 tracking-widest uppercase text-center"
                                     style={{
                                         fontFamily: 'monospace',
                                         textShadow: '0 0 10px rgba(0,255,0,0.6)'
@@ -168,7 +168,7 @@ export default function SettingsPage() {
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.8, repeat: Infinity, duration: 1.5, repeatType: 'reverse' }}
-                                className="mt-8 text-green-400 font-mono text-xl md:text-2xl border border-green-500/50 bg-green-500/10 px-6 py-2 rounded"
+                                className="mt-8 text-center text-green-400 font-mono text-sm sm:text-lg md:text-2xl border border-green-500/50 bg-green-500/10 px-4 sm:px-6 py-2 rounded"
                             >
                                 SYSTEM OVERRIDE ACTIVE // ROOT ACCESS GRANTED
                             </motion.div>
@@ -208,9 +208,9 @@ export default function SettingsPage() {
                                 transition={{ delay: 0.05 * idx }}
                             >
                                 <GlassCard glow={setting.color === 'green' ? 'cyan' : setting.color}>
-                                    <div className="flex items-center justify-between gap-4">
+                                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                                         {/* Icon & Description */}
-                                        <div className="flex items-start gap-3">
+                                        <div className="flex min-w-0 items-start gap-3">
                                             <motion.div
                                                 animate={{ scale: setting.enabled ? 1.1 : 1 }}
                                                 className="mt-0.5"
@@ -225,12 +225,12 @@ export default function SettingsPage() {
                                                 </div>
                                             </motion.div>
 
-                                            <div className="flex-1">
+                                            <div className="flex-1 min-w-0">
                                                 <h3 className="font-semibold text-white flex items-center gap-2">
                                                     {setting.title}
                                                     {setting.badge && <Badge color="info" className="text-[10px] py-0 px-2">{setting.badge}</Badge>}
                                                 </h3>
-                                                <p className="text-sm text-gray-400">{setting.description}</p>
+                                                <p className="text-sm text-gray-400 break-words">{setting.description}</p>
                                             </div>
                                         </div>
 
@@ -273,8 +273,8 @@ export default function SettingsPage() {
                 transition={{ delay: 0.3 }}
             >
                 <GlassCard glow={devMode ? 'orange' : 'cyan'}>
-                    <div className="flex items-center justify-between gap-4">
-                        <div className="flex items-start gap-3">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="flex min-w-0 items-start gap-3">
                             <motion.div
                                 animate={{ rotate: devMode ? 180 : 0 }}
                                 className="mt-0.5"
@@ -287,14 +287,14 @@ export default function SettingsPage() {
                                 </div>
                             </motion.div>
 
-                            <div className="flex-1">
+                            <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
                                     <h3 className="font-semibold text-white">Developer Mode</h3>
                                     <Badge color={devMode ? 'danger' : 'info'}>
                                         {devMode ? 'Enabled' : 'Disabled'}
                                     </Badge>
                                 </div>
-                                <p className="text-sm text-gray-400">
+                                <p className="text-sm text-gray-400 break-words">
                                     Access Mojo engine logs and advanced diagnostics
                                 </p>
                             </div>

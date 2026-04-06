@@ -63,7 +63,7 @@ export default function Home() {
                         <SectionHeading
                             level="h1"
                             subtitle="Protect your identity with sovereign, low-latency threat detection powered by Mojo and Auth0."
-                            className="text-4xl md:text-6xl lg:text-7xl max-w-5xl"
+                            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl max-w-full sm:max-w-5xl"
                         >
                             AetherCore: Your Digital Bodyguard
                         </SectionHeading>
@@ -110,7 +110,7 @@ export default function Home() {
 
             {/* System Status Preview */}
             <motion.section variants={itemVariants} className="space-y-4">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <h2 className="text-2xl font-bold text-white">Live System Status</h2>
                     <span className="text-sm text-cyan-400 flex items-center gap-1">
                         <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />

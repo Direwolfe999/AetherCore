@@ -145,7 +145,7 @@ export default function ReasoningPage() {
 
     return (
         <div className="space-y-8 max-w-5xl mx-auto pb-10">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
                 <div className="flex items-center gap-3">
                     <BrainCircuit className="w-8 h-8 text-cyan-500" />
                     <SectionHeading subtitle="Real-time Explainable AI (XAI) Thought Process" className="m-0">
@@ -153,28 +153,30 @@ export default function ReasoningPage() {
                     </SectionHeading>
                 </div>
 
-                <button
-                    onClick={() => setIsAttackMode(!isAttackMode)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-xs font-bold transition-all border ${isAttackMode
-                        ? 'bg-red-500/20 text-red-400 border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)] animate-pulse'
-                        : 'bg-white/5 text-zinc-400 border-white/10 hover:bg-white/10 hover:text-white'
-                        }`}
-                >
-                    <AlertOctagon className="w-4 h-4" />
-                    {isAttackMode ? 'SIMULATION ACTIVE' : 'SIMULATE ATTACK'}
-                </button>
-                <button
-                    onClick={() => { toast.success('Initializing Neural PDF Export...', { description: 'Compiling session logs headers. Launching Print Dialogue.' }); setTimeout(() => window.print(), 1500) }}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-xs font-bold transition-all border bg-white/5 text-zinc-400 border-white/10 hover:bg-cyan-500/10 hover:text-cyan-400"
-                >
-                    <Printer className="w-4 h-4" />
-                    EXPORT PDF
-                </button>
+                <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+                    <button
+                        onClick={() => setIsAttackMode(!isAttackMode)}
+                        className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-mono text-xs font-bold transition-all border ${isAttackMode
+                            ? 'bg-red-500/20 text-red-400 border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)] animate-pulse'
+                            : 'bg-white/5 text-zinc-400 border-white/10 hover:bg-white/10 hover:text-white'
+                            }`}
+                    >
+                        <AlertOctagon className="w-4 h-4" />
+                        {isAttackMode ? 'SIMULATION ACTIVE' : 'SIMULATE ATTACK'}
+                    </button>
+                    <button
+                        onClick={() => { toast.success('Initializing Neural PDF Export...', { description: 'Compiling session logs headers. Launching Print Dialogue.' }); setTimeout(() => window.print(), 1500) }}
+                        className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-mono text-xs font-bold transition-all border bg-white/5 text-zinc-400 border-white/10 hover:bg-cyan-500/10 hover:text-cyan-400"
+                    >
+                        <Printer className="w-4 h-4" />
+                        EXPORT PDF
+                    </button>
+                </div>
             </div>
 
             <GlassCard className="p-0 overflow-hidden border border-white/10" glow="cyan">
                 {/* Header toolbar */}
-                <div className="flex items-center justify-between border-b border-white/10 bg-white/5 p-4">
+                <div className="flex flex-col gap-3 border-b border-white/10 bg-white/5 p-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center space-x-4">
                         <div className="flex space-x-2">
                             <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
@@ -183,7 +185,7 @@ export default function ReasoningPage() {
                         </div>
                         <span className="text-xs font-mono text-cyan-400">aethercore_debugger_v2.1</span>
                     </div>
-                    <div className="flex gap-2"><Badge color={dataSource === "real" ? "success" : "warning"} variant="neutral">{dataSource === "real" ? "REAL MOJO DATA" : "MOCK DATA"}</Badge><Badge color="cyan" variant="neutral">XAI MODE: ACTIVE</Badge></div>
+                    <div className="flex flex-wrap gap-2"><Badge color={dataSource === "real" ? "success" : "warning"} variant="neutral">{dataSource === "real" ? "REAL MOJO DATA" : "MOCK DATA"}</Badge><Badge color="cyan" variant="neutral">XAI MODE: ACTIVE</Badge></div>
                 </div>
 
                 {/* Timeline body */}

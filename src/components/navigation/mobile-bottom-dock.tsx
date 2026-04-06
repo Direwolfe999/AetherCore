@@ -110,7 +110,7 @@ export function MobileBottomDock() {
                                         active ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400 shadow-[0_0_15px_rgba(0,240,255,0.1)]' : 'text-gray-400 focus:bg-white/10'
                                     )}>
                                         <IconComponent className="w-5 h-5 mb-1.5" />
-                                        <span className="text-[10px] font-medium leading-none text-center whitespace-nowrap">{item.label}</span>
+                                        <span className="text-[10px] font-medium leading-none text-center truncate w-full">{item.label}</span>
                                     </div>
                                 </Link>
                             )
@@ -119,7 +119,7 @@ export function MobileBottomDock() {
                 </motion.div>
             )}
 
-            <div className="relative z-10 grid w-full grid-cols-5 gap-1 border-t border-white/10 bg-black/30 px-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2">
+            <div className="relative z-10 grid w-full grid-cols-5 gap-0.5 sm:gap-1 border-t border-white/10 bg-black/30 px-1.5 sm:px-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2">
                 {mainNavItems.map((item) => {
                     const IconComponent = item.icon;
                     const active = isActive(item.path);
@@ -159,7 +159,7 @@ export function MobileBottomDock() {
                                 </motion.div>
 
                                 {/* Label */}
-                                <span className="text-[10px] font-medium whitespace-nowrap leading-none">{item.label}</span>
+                                <span className="text-[9px] sm:text-[10px] font-medium leading-none truncate w-full text-center">{item.label}</span>
                             </motion.div>
                         </Link>
                     );
@@ -183,7 +183,7 @@ export function MobileBottomDock() {
                         <MoreHorizontal className="h-[22px] w-[22px]" />
                     </motion.div>
                     <span className={cn(
-                        "text-[10px] font-medium whitespace-nowrap leading-none transition-colors",
+                        "text-[9px] sm:text-[10px] font-medium leading-none transition-colors truncate w-full text-center",
                         showMore ? "text-white" : ""
                     )}>More</span>
                 </button>

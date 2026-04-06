@@ -1,14 +1,17 @@
 import asyncio
 import json
 import os
+import logging
 from engine.models import ThreatAnalysisResponse
+
+logger = logging.getLogger(__name__)
 
 class SyncEngine:
     def __init__(self):
         self.mojo_binary_path = os.path.join(os.path.dirname(__file__), "..", "engine", "analyzer.mojo")
 
     async def run_mojo_analysis(self) -> ThreatAnalysisResponse:
-        print("SyncEngine: Triggering Mojo Scanner (Async)...")
+        logger.info("Triggering Mojo Scanner (Async)")
         try:
             # We assume `mojo` is in PATH in our Docker/Railway setup
             process = await asyncio.create_subprocess_exec(
@@ -25,7 +28,7 @@ class SyncEngine:
                 raise Exception(f"Mojo process failed: {stderr.decode()}")
                 
         except Exception as e:
-            print(f"Error running Mojo Analyzer: {e}")
+            logger.exception("Error running Mojo Analyzer")
             # Fallback mock if Mojo isn't properly installed locally
             return ThreatAnalysisResponse(
                 chain_of_thought=["Mojo fallback: payload analyzed.", "Identified anomaly from legacy engine."],
@@ -35,6 +38,6 @@ class SyncEngine:
 
     async def sync_google_data(self, google_token: str):
         # Code to hit Google API with token
-        print(f"SyncEngine: Using token {google_token[:10]}... to scan Gmail / Calendar.")
+        logger.info("Syncing Google data", extra={"token_preview": f"{google_token[:10]}..."})
         # Trigger Mojo scanner for analysis after fetching data
         return await self.run_mojo_analysis()

@@ -1,5 +1,8 @@
 import os
+import logging
 import httpx
+
+logger = logging.getLogger(__name__)
 
 class VaultService:
     def __init__(self):
@@ -10,7 +13,7 @@ class VaultService:
     async def exchange_token_for_google(self, auth0_jwt: str) -> str:
         # Pseudo-logic to simulate fetching Google Access Token via Auth0 Token Vault Management
         # In a real environment, you might use auth0-python SDK or specialized endpoints.
-        print("VaultService: Exchanging Auth0 JWT for Google Access Token...")
+        logger.info("Exchanging Auth0 JWT for Google Access Token")
         # Simulating API request to get vault token
         # async with httpx.AsyncClient() as client:
         #     res = await client.post(f"https://{self.domain}/oauth/token", data={...})

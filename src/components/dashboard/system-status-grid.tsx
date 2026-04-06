@@ -33,7 +33,7 @@ function StatCard({ label, value, icon: Icon, unit, color = 'cyan', index }: Sta
                 <div className="flex items-start justify-between mb-3">
                     <div>
                         <p className="text-xs text-gray-400 uppercase tracking-widest">{label}</p>
-                        <p className="text-2xl md:text-3xl font-bold text-white mt-1">
+                        <p className="mt-1 text-xl sm:text-2xl md:text-3xl font-bold text-white break-words">
                             {value}
                             {unit && <span className="text-sm text-gray-400 ml-1">{unit}</span>}
                         </p>

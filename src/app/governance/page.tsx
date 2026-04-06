@@ -57,7 +57,7 @@ export default function GovernancePage() {
             </div>
 
             {/* Node Graph Visualization (Simulated with Flexbox & SVG) */}
-            <GlassCard className={`p-8 relative overflow-hidden transition-all duration-500 ${isRevoked ? 'opacity-50 grayscale' : ''} ${isGlitching ? 'scale-[1.02] skew-x-1 border-red-500' : 'border-white/5'}`} glow={isRevoked ? 'orange' : 'cyan'}>
+            <GlassCard className={`p-4 sm:p-6 md:p-8 relative overflow-hidden transition-all duration-500 ${isRevoked ? 'opacity-50 grayscale' : ''} ${isGlitching ? 'scale-[1.02] skew-x-1 border-red-500' : 'border-white/5'}`} glow={isRevoked ? 'orange' : 'cyan'}>
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,240,255,0.05)_0%,transparent_70%)]"></div>
                 <h3 className="text-sm font-mono text-zinc-400 mb-8 uppercase tracking-widest flex items-center gap-2">
                     <Activity className={`w-4 h-4 ${isRevoked ? 'text-red-500' : 'text-cyan-400'}`} /> {isRevoked ? 'Authorization Severed' : 'Live Authorization Flow'}
@@ -67,8 +67,8 @@ export default function GovernancePage() {
 
                     {/* Node: User */}
                     <div className={`flex flex-col items-center gap-3 relative z-10 transition-transform ${isGlitching ? 'translate-x-[-10px]' : ''}`}>
-                        <div className={`w-16 h-16 rounded-full bg-white/5 border flex items-center justify-center ${isRevoked ? 'border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.1)]'}`}>
-                            <Shield className={`w-8 h-8 ${isRevoked ? 'text-red-500' : 'text-white'}`} />
+                        <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white/5 border flex items-center justify-center ${isRevoked ? 'border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.1)]'}`}>
+                            <Shield className={`w-6 h-6 sm:w-8 sm:h-8 ${isRevoked ? 'text-red-500' : 'text-white'}`} />
                         </div>
                         <span className="font-mono text-xs font-semibold">User Identity</span>
                     </div>
@@ -81,8 +81,8 @@ export default function GovernancePage() {
 
                     {/* Node: Auth0 Vault */}
                     <div className={`flex flex-col items-center gap-3 relative z-10 transition-transform ${isGlitching ? 'translate-y-[-10px]' : ''}`}>
-                        <div className={`group w-20 h-20 rounded-2xl bg-[#0a0a0a] border flex items-center justify-center ${isRevoked ? 'border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.2)]' : 'border-cyan-500/30 shadow-[0_0_20px_rgba(0,240,255,0.2)]'}`}>
-                            <Key className={`w-10 h-10 ${isRevoked ? 'text-red-500' : 'text-cyan-400'} group-hover:scale-110 transition-transform`} />
+                        <div className={`group w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#0a0a0a] border flex items-center justify-center ${isRevoked ? 'border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.2)]' : 'border-cyan-500/30 shadow-[0_0_20px_rgba(0,240,255,0.2)]'}`}>
+                            <Key className={`w-8 h-8 sm:w-10 sm:h-10 ${isRevoked ? 'text-red-500' : 'text-cyan-400'} group-hover:scale-110 transition-transform`} />
                         </div>
                         <div className="flex flex-col items-center">
                             <span className={`font-mono text-xs font-semibold ${isRevoked ? 'text-red-500' : 'text-cyan-400'}`}>Auth0 Token Vault</span>
@@ -107,9 +107,9 @@ export default function GovernancePage() {
 
                     {/* Node: Agent */}
                     <div className="flex flex-col items-center gap-3 relative z-10">
-                        <div className="group w-16 h-16 rounded-full bg-white/5 border border-white/20 flex items-center justify-center relative">
+                        <div className="group w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white/5 border border-white/20 flex items-center justify-center relative">
                             {!isRevoked && <div className="absolute inset-0 border border-cyan-500/50 rounded-full animate-ping opacity-20"></div>}
-                            <Bot className={`w-8 h-8 ${isRevoked ? 'text-zinc-600' : 'text-white'} group-hover:text-cyan-400 transition-colors`} />
+                            <Bot className={`w-6 h-6 sm:w-8 sm:h-8 ${isRevoked ? 'text-zinc-600' : 'text-white'} group-hover:text-cyan-400 transition-colors`} />
                         </div>
                         <span className={`font-mono text-xs font-semibold ${isRevoked ? 'text-zinc-600' : ''}`}>Aether Agent</span>
                     </div>
@@ -122,8 +122,8 @@ export default function GovernancePage() {
 
                     {/* Node: Endpoint */}
                     <div className={`flex flex-col items-center gap-3 relative z-10 transition-transform ${isGlitching ? 'translate-x-[10px]' : ''}`}>
-                        <div className={`group w-16 h-16 rounded-xl bg-orange-500/5 border flex items-center justify-center ${isRevoked ? 'border-zinc-800' : 'border-orange-500/30 shadow-[0_0_15px_rgba(255,77,0,0.1)]'}`}>
-                            <Database className={`w-8 h-8 ${isRevoked ? 'text-zinc-700' : 'text-orange-400'} group-hover:scale-110 transition-transform`} />
+                        <div className={`group w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-orange-500/5 border flex items-center justify-center ${isRevoked ? 'border-zinc-800' : 'border-orange-500/30 shadow-[0_0_15px_rgba(255,77,0,0.1)]'}`}>
+                            <Database className={`w-6 h-6 sm:w-8 sm:h-8 ${isRevoked ? 'text-zinc-700' : 'text-orange-400'} group-hover:scale-110 transition-transform`} />
                         </div>
                         <span className={`font-mono text-xs font-semibold ${isRevoked ? 'text-zinc-600' : 'text-orange-400'}`}>Google API</span>
                     </div>
@@ -131,7 +131,7 @@ export default function GovernancePage() {
                 </div>
             </GlassCard>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
                 {/* Active Permissions */}
                 <div className="space-y-4">
                     <h3 className="text-sm font-medium text-zinc-300 flex items-center gap-2">
@@ -139,8 +139,9 @@ export default function GovernancePage() {
                     </h3>
                     <div className="grid gap-3">
                         {activePermissions.map((perm) => (
-                            <GlassCard key={perm.id} className="p-4 border-white/5 flex items-center justify-between group">
-                                <div>
+                            <GlassCard key={perm.id} className="p-4 border-white/5 group">
+                                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                <div className="min-w-0">
                                     <h4 className="font-medium text-sm text-white">{perm.name}</h4>
                                     <p className="text-xs text-zinc-500 font-mono mt-1">{perm.service}</p>
                                 </div>
@@ -151,6 +152,7 @@ export default function GovernancePage() {
                                     <button className="text-zinc-500 hover:text-red-400 transition-colors">
                                         <XCircle className="w-5 h-5" />
                                     </button>
+                                </div>
                                 </div>
                             </GlassCard>
                         ))}
@@ -165,19 +167,21 @@ export default function GovernancePage() {
                     <GlassCard className="p-0 overflow-hidden border-white/5">
                         <div className="divide-y divide-white/5">
                             {auditLogs.map((log) => (
-                                <div key={log.id} className="p-3 text-sm flex items-center justify-between hover:bg-white/5 transition-colors">
-                                    <div className="flex gap-4 items-center">
-                                        <span className="font-mono text-xs text-zinc-500 w-16">{log.time}</span>
+                                <div key={log.id} className="p-3 text-sm transition-colors hover:bg-white/5">
+                                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                                    <div className="flex gap-3 items-start sm:items-center">
+                                        <span className="font-mono text-xs text-zinc-500 w-16 shrink-0">{log.time}</span>
                                         <div>
                                             <span className="text-zinc-300 font-medium block">{log.action}</span>
-                                            <span className="text-xs text-zinc-500 font-mono">
+                                            <span className="text-xs text-zinc-500 font-mono break-words">
                                                 {log.actor} → {log.target}
                                             </span>
                                         </div>
                                     </div>
-                                    <Badge color={log.status === 'Success' ? 'green' : 'orange'} className="text-[10px]">
+                                    <Badge color={log.status === 'Success' ? 'green' : 'orange'} className="text-[10px] w-fit">
                                         {log.status}
                                     </Badge>
+                                    </div>
                                 </div>
                             ))}
                         </div>

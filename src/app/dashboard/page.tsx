@@ -118,7 +118,7 @@ export default function DashboardPage() {
                                     key={securityScore}
                                     initial={{ y: 20, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
-                                    className="text-6xl font-bold bg-gradient-to-r from-cyan-400 to-orange-400 bg-clip-text text-transparent"
+                                    className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-cyan-400 to-orange-400 bg-clip-text text-transparent"
                                 >
                                     {securityScore}
                                 </motion.span>
@@ -143,7 +143,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* 3D WebGL Threat Globe */}
-                <div className="flex flex-col items-center justify-center w-full max-w-[400px] mx-auto h-[350px]">
+                <div className="flex h-64 w-full max-w-[95vw] flex-col items-center justify-center sm:h-80 sm:max-w-[400px] md:h-[350px]">
                     <div className="relative w-full h-full">
                         <div onClick={() => toast.success('Secure channel active', { description: 'Global uplink to all data centers established.' })} className='cursor-pointer'><Globe threatActive={threatActive} /></div>
 
@@ -175,7 +175,7 @@ export default function DashboardPage() {
                                     </span>
                                     <PulseIndicator color={metric.color} size="sm" animated />
                                 </div>
-                                <div className="text-3xl font-bold text-white relative z-10 flex items-baseline">
+                                <div className="text-2xl sm:text-3xl font-bold text-white relative z-10 flex items-baseline">
                                     {metric.value}
                                     {metric.unit && (
                                         <span className="ml-1 text-lg text-gray-400">{metric.unit}</span>
@@ -241,13 +241,13 @@ export default function DashboardPage() {
                                         initial={{ x: -20, opacity: 0 }}
                                         animate={{ x: 0, opacity: 1 }}
                                         transition={{ delay: 0.5 + idx * 0.1 }}
-                                        className="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 transition-colors group text-sm"
+                                        className="flex flex-col gap-2 p-2 text-sm rounded-lg transition-colors group hover:bg-white/5 sm:flex-row sm:items-center sm:justify-between"
                                     >
-                                        <div className="flex items-center gap-3 text-gray-300 group-hover:text-white">
+                                        <div className="flex items-start gap-3 text-gray-300 group-hover:text-white sm:items-center">
                                             <div className={`h-2 w-2 rounded-full ${activity.color} shadow-[0_0_8px_currentColor]`} />
-                                            <span>{activity.msg}</span>
+                                            <span className="break-words">{activity.msg}</span>
                                         </div>
-                                        <span className="text-xs font-mono text-gray-500">{activity.time}</span>
+                                        <span className="text-xs font-mono text-gray-500 sm:text-right">{activity.time}</span>
                                     </motion.div>
                                 ))}
                             </div>

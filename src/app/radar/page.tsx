@@ -89,7 +89,7 @@ export default function RadarPage() {
 
                 {/* Main Radar / Heatmap View */}
                 <div className="lg:col-span-2">
-                    <GlassCard className="p-8 relative overflow-hidden h-[450px] flex items-center justify-center border-white/5 bg-[#050505] shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]">
+                    <GlassCard className="p-4 sm:p-6 md:p-8 relative overflow-hidden h-80 sm:h-96 md:h-[450px] flex items-center justify-center border-white/5 bg-[#050505] shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]">
                         {/* Background Grid Lines (Radar aesthetic) */}
                         <div className="absolute inset-0 opacity-10"
                             style={{ backgroundImage: 'radial-gradient(circle at center, #00f0ff 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
@@ -120,7 +120,7 @@ export default function RadarPage() {
                         </div>
 
                         {/* Simulated Heatmap Grid mapping over the Radar */}
-                        <div className="absolute inset-8 z-10 grid grid-cols-8 grid-rows-8 gap-1 opacity-80 mix-blend-screen px-4 py-4">
+                        <div className="absolute inset-4 sm:inset-6 md:inset-8 z-10 grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 grid-rows-4 sm:grid-rows-6 md:grid-rows-8 gap-0.5 sm:gap-1 opacity-80 mix-blend-screen px-2 sm:px-4 py-2 sm:py-4">
                             {heatmapData.map((cell) => (
                                 <motion.div
                                     key={cell.id}
@@ -137,7 +137,7 @@ export default function RadarPage() {
                                 >
                                     {hoveredNode === cell.id && (
                                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none mt-2">
-                                            <div className="bg-black/90 border border-white/10 px-2 py-1 text-[10px] font-mono whitespace-nowrap rounded text-white shadow-xl">
+                                            <div className="max-w-[70vw] rounded border border-white/10 bg-black/90 px-2 py-1 text-[10px] font-mono text-white shadow-xl sm:max-w-none sm:whitespace-nowrap">
                                                 SEC_ID: {cell.id} <br />
                                                 <span className={cell.isAnomaly ? "text-orange-400" : "text-cyan-400"}>
                                                     LVL: {Math.round(cell.intensity)}%

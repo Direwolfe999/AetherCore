@@ -12,7 +12,7 @@ export function ArchitectureMap() {
                 Backend Architecture
             </h2>
 
-            <div className="relative flex flex-col md:flex-row items-center justify-between gap-6 p-8 rounded-xl border border-white/10 bg-black/40 backdrop-blur-md">
+            <div className="relative flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 p-4 sm:p-6 md:p-8 rounded-xl border border-white/10 bg-black/40 backdrop-blur-md">
                 {/* Background Glow */}
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-orange-500/10 to-cyan-500/10 rounded-xl blur-xl" />
 
@@ -30,7 +30,7 @@ export function ArchitectureMap() {
                         <p className="text-xs text-gray-400 mt-2">Frontend & Identity</p>
 
                         {/* Tooltip */}
-                        <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity -top-12 left-1/2 -translate-x-1/2 bg-black/90 border border-cyan-500/50 text-cyan-400 text-xs px-3 py-1.5 rounded pointer-events-none whitespace-nowrap z-20">
+                        <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity -top-12 left-1/2 -translate-x-1/2 bg-black/90 border border-cyan-500/50 text-cyan-400 text-xs px-2 sm:px-3 py-1.5 rounded pointer-events-none max-w-[80vw] sm:max-w-none text-center sm:whitespace-nowrap z-20">
                             Secure authentication gateway
                         </div>
                     </GlassCard>
@@ -69,7 +69,7 @@ export function ArchitectureMap() {
                         <h3 className="text-lg font-bold text-white">FastAPI</h3>
                         <p className="text-xs text-gray-400 mt-2">Orchestration Layer</p>
 
-                        <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity -top-12 left-1/2 -translate-x-1/2 bg-black/90 border border-orange-500/50 text-orange-400 text-xs px-3 py-1.5 rounded pointer-events-none whitespace-nowrap z-20">
+                        <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity -top-12 left-1/2 -translate-x-1/2 bg-black/90 border border-orange-500/50 text-orange-400 text-xs px-2 sm:px-3 py-1.5 rounded pointer-events-none max-w-[80vw] sm:max-w-none text-center sm:whitespace-nowrap z-20">
                             API routing & middleware
                         </div>
                     </GlassCard>
@@ -108,7 +108,7 @@ export function ArchitectureMap() {
                         <h3 className="text-lg font-bold text-white">Mojo Engine</h3>
                         <p className="text-xs text-gray-400 mt-2">AI Inference & Sync</p>
 
-                        <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity -top-12 left-1/2 -translate-x-1/2 bg-black/90 border border-green-500/50 text-green-400 text-xs px-3 py-1.5 rounded pointer-events-none whitespace-nowrap z-20">
+                        <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity -top-12 left-1/2 -translate-x-1/2 bg-black/90 border border-green-500/50 text-green-400 text-xs px-2 sm:px-3 py-1.5 rounded pointer-events-none max-w-[80vw] sm:max-w-none text-center sm:whitespace-nowrap z-20">
                             High-performance processing
                         </div>
                     </GlassCard>

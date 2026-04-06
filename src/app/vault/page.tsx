@@ -103,13 +103,13 @@ export default function VaultPage() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
                     >
                         <motion.div
                             initial={{ scale: 0.9, y: 20 }}
                             animate={{ scale: 1, y: 0 }}
                             exit={{ scale: 0.9, y: 20 }}
-                            className="bg-[#0A0A0A] border border-cyan-500/30 p-8 rounded-2xl max-w-md w-full shadow-[0_0_50px_rgba(0,240,255,0.1)] relative overflow-hidden"
+                            className="bg-[#0A0A0A] border border-cyan-500/30 p-4 sm:p-6 md:p-8 rounded-2xl max-w-md w-full shadow-[0_0_50px_rgba(0,240,255,0.1)] relative overflow-hidden"
                         >
                             {/* Scanning line effect */}
                             <motion.div
@@ -147,7 +147,7 @@ export default function VaultPage() {
                                 </div>
 
                                 <div>
-                                    <h3 className="text-2xl font-bold text-white mb-2">Step-Up Authentication</h3>
+                                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">Step-Up Authentication</h3>
                                     <p className="text-gray-400 text-sm">
                                         {mfaStatus === 'pending'
                                             ? "Critical action requested. Please verify your identity via Auth0 WebAuthn to proceed."
@@ -265,7 +265,7 @@ export default function VaultPage() {
             </div>
 
             {/* Connected Accounts */}
-            <div className="space-y-4">
+                    <div className="space-y-4 min-w-0">
                 <h2 className="text-lg font-semibold text-white flex items-center gap-2">
                     <Shield className="h-5 w-5 text-cyan-400" strokeWidth={1.5} />
                     Connected Accounts
@@ -284,19 +284,19 @@ export default function VaultPage() {
                                 <GlassCard glow="cyan">
                                     <div className="space-y-4">
                                         {/* Header */}
-                                        <div className="flex items-start justify-between">
-                                            <div className="flex items-center gap-3">
+                                        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                                            <div className="flex items-center gap-3 min-w-0">
                                                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/5 border border-white/10">
                                                     <AccountIcon className="h-6 w-6 text-cyan-400" />
                                                 </div>
-                                                <div>
-                                                    <h3 className="text-base font-semibold text-white">
+                                                <div className="min-w-0">
+                                                    <h3 className="text-base font-semibold text-white break-words">
                                                         {account.provider}
                                                     </h3>
-                                                    <p className="text-sm text-gray-400">{account.email}</p>
+                                                    <p className="text-sm text-gray-400 break-all">{account.email}</p>
                                                 </div>
                                             </div>
-                                            <Badge color="success">Connected</Badge>
+                                            <Badge color="success" className="w-fit">Connected</Badge>
                                         </div>
 
                                         {/* Divider */}
