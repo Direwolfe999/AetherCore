@@ -15,4 +15,10 @@ opentelemetry-api>=1.28,<2.0
 opentelemetry-sdk>=1.28,<2.0
 opentelemetry-exporter-otlp>=1.28,<2.0
 opentelemetry-instrumentation-fastapi>=0.49b0
-opentelemetry-instrumentation-httpx>=0.49b0
+opentelemetry-instrumentation-httpx>=0.49b0pytest>=7.4,<8.0
+pytest-asyncio>=0.23,<1.0
+pytest-cov>=4.1,<5.0
+httpx>=0.25,<1.0
+mypy>=1.8,<2.0
+types-httpx>=0.25
+ruff>=0.3,<1.0
