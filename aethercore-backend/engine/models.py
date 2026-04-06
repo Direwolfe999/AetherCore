@@ -1,14 +1,14 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List
 
 
 class MojoAnalysisInput(BaseModel):
     calendar_event_count: int = 0
     unknown_attendee_count: int = 0
-    suspicious_domains: List[str] = []
+    suspicious_domains: List[str] = Field(default_factory=list)
     repo_count: int = 0
     recent_deployments: int = 0
-    access_pattern_anomalies: List[str] = []
+    access_pattern_anomalies: List[str] = Field(default_factory=list)
 
 
 class ThreatAnalysisResponse(BaseModel):
