@@ -1,30 +1,3 @@
-import { handleAuth, handleLogin, handleCallback, handleLogout, handleProfile } from '@auth0/nextjs-auth0';
-import { NextRequest } from 'next/server';
+import { handleAuth } from '@auth0/nextjs-auth0';
 
-export const GET = async (req: NextRequest, ctx: any) => {
-  const paramsRaw = await ctx.params;
-  const auth0 = paramsRaw.auth0;
-  
-  let action = '';
-  if (Array.isArray(auth0)) {
-    action = auth0[0];
-  } else {
-    action = auth0;
-  }
-  
-  console.log("AUTH ROUTE HIT:", { action, paramsRaw });
-  
-  const syncCtx = { params: { auth0: action } };
-  
-  if (action === 'login') {
-    return handleLogin(req, syncCtx);
-  } else if (action === 'callback') {
-    return handleCallback(req, syncCtx);
-  } else if (action === 'logout') {
-    return handleLogout(req, syncCtx);
-  } else if (action === 'me') {
-    return handleProfile(req, syncCtx);
-  }
-  
-  return new Response("Not Found Action: " + action, { status: 404 });
-};
+export const GET = handleAuth();

@@ -115,19 +115,15 @@ To connect real data:
 ## 🔐 Authentication
 
 ### Current State
-- Mock Auth0 session (development only)
-- No real credentials required
-- User can toggle between guest/authenticated views
+- Real Auth0 session handling via `@auth0/nextjs-auth0`
+- Login, callback, logout, and profile routes are wired in the App Router
+- The UI reads auth state with `useUser()` through `use-auth-state`
 
-### To Enable Real Auth0
-1. Get Auth0 credentials from https://auth0.com
-2. Update `.env.local`:
-   ```
-   NEXT_PUBLIC_AUTH0_DOMAIN=your-domain.us.auth0.com
-   NEXT_PUBLIC_AUTH0_CLIENT_ID=your_client_id
-   ```
-3. Update `src/lib/auth0.ts` with real SDK
-4. Update `src/hooks/use-auth-state.ts` to use real methods
+### To Set Up Auth0
+1. Follow [docs/AUTH0_SETUP.md](docs/AUTH0_SETUP.md)
+2. Create `.env.local` from [.env.example](.env.example)
+3. Configure the callback, logout, and web origin URLs in Auth0
+4. Start the app and verify `/api/auth/login` and `/api/auth/me`
 
 ---
 

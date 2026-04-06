@@ -1,7 +1,0 @@
-                            <div className="space-y-3 border-t border-white/10 pt-4">
-                                {[
-                                    { msg: 'Auth0 API Rate Limit hit -> Graceful Backoff', time: 'Just now', color: 'bg-orange-400' },
-                                    { msg: 'Agent re-routed to secondary Auth0 RPC', time: '2m ago', color: 'bg-cyan-400' },
-                                    { msg: 'Missing Google Token: Handled via 403 Fallback UI', time: '14m ago', color: 'bg-green-400' },
-                                    { msg: 'Network integrity verified', time: '1h ago', color: 'bg-cyan-400' },
-                                ].map((activity, idx) => (

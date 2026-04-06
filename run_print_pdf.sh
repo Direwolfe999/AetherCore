@@ -1,4 +1,0 @@
-#!/bin/bash
-sed -i "s/import { BrainCircuit,/import { Printer, BrainCircuit,/g" src/app/reasoning/page.tsx
-sed -i "s/<AlertOctagon className=\"w-4 h-4\" \/>/<AlertOctagon className=\"w-4 h-4\" \/>/g" src/app/reasoning/page.tsx
-sed -i "s/SIMULATE ATTACK'}\n                <\/button>/\n                    SIMULATE ATTACK'}\n                <\/button>\n\n                <button\n                    onClick={() => { toast.success('Initializing Neural PDF Export...', { description: 'Compiling session logs headers. Launching Print Dialogue.' }); setTimeout(() => window.print(), 1500) }}\n                    className=\"flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-xs font-bold transition-all border bg-white\/5 text-zinc-400 border-white\/10 hover:bg-cyan-500\/10 hover:text-cyan-400\"\n                >\n                    <Printer className=\"w-4 h-4\" \/>\n                    EXPORT PDF\n                <\/button>\n/g" src/app/reasoning/page.tsx

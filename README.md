@@ -33,6 +33,8 @@ AetherCore leverages **Auth0** not just for logging in, but as the backbone of o
 - **Role-Based Access Control (RBAC)**: Fine-grained permissions (Observer, Analyst, Guardian) enforced at the edge.
 - **Secure Sessions**: Silent authentication, token rotation, and strict absolute session timeouts to prevent unauthorized physical access.
 
+For the exact setup values and callback URLs, see [docs/AUTH0_SETUP.md](docs/AUTH0_SETUP.md).
+
 ![Auth0 Flow Architecture](https://via.placeholder.com/800x450/050505/FF4D00?text=Auth0+Architecture+Diagram)
 
 ---
