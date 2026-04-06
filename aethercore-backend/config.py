@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     app_env: str = Field(default="development", alias="APP_ENV")
     log_level: str = Field(default="INFO", alias="LOG_LEVEL")
     frontend_url: str | None = Field(default=None, alias="FRONTEND_URL")
+    database_url: str = Field(default="sqlite:///./aethercore.db", alias="DATABASE_URL")
     auth0_domain: str = Field(default="", alias="AUTH0_DOMAIN")
     auth0_issuer_base_url: str = Field(default="", alias="AUTH0_ISSUER_BASE_URL")
     auth0_audience: str = Field(default="", alias="AUTH0_AUDIENCE")
@@ -64,6 +65,9 @@ class Settings(BaseSettings):
 
     def resolved_auth0_jwks_url(self) -> str:
         return f"{self.resolved_auth0_issuer()}/.well-known/jwks.json"
+
+    def is_sqlite(self) -> bool:
+        return self.database_url.startswith("sqlite")
 
 
 @lru_cache(maxsize=1)
