@@ -8,7 +8,7 @@ from celery.result import AsyncResult
 
 from config import get_settings
 from security.auth import AuthenticatedUser, require_auth
-from engine.models import SyncRequest, ThreatAnalysisResponse
+from engine.models import SyncRequest, ThreatAnalysisResponse, SystemOverviewResponse
 from observability.logging import configure_logging
 from observability.metrics import MetricsMiddleware, metrics_response, record_sync_job
 from observability.tracing import setup_tracing
@@ -132,6 +132,22 @@ async def mojo_health_check():
 @app.get("/metrics")
 def metrics():
     return metrics_response()
+
+
+@app.get("/api/status/overview", response_model=SystemOverviewResponse)
+async def status_overview():
+    mojo_health = await sync_engine.mojo_runtime_health()
+    return SystemOverviewResponse(
+        status="operational",
+        environment=settings.app_env,
+        database_url="sqlite" if settings.is_sqlite() else "postgresql",
+        auth0_configured=bool(settings.resolved_auth0_issuer() and settings.auth0_audience.strip()),
+        mojo=mojo_health,
+        queue={
+            "broker": settings.redis_url,
+            "result_backend": settings.resolved_celery_result_backend(),
+        },
+    )
 
 @app.post("/api/sync/google")
 async def sync_google(

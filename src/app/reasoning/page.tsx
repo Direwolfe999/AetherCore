@@ -7,6 +7,7 @@ import { SectionHeading } from '@/components/ui/section-heading';
 import { GlassCard } from '@/components/ui/glass-card';
 import { Badge } from '@/components/ui/badge';
 import { Printer, BrainCircuit, GitCommit, Search, ShieldAlert, Cpu, CheckCircle2, Lock, AlertOctagon } from 'lucide-react';
+import { fetchBackend, type BackendReasoningResponse } from '@/lib/backend';
 
 interface DecisionNode {
     id: string;
@@ -98,31 +99,39 @@ const attackTimeline: DecisionNode[] = [
 export default function ReasoningPage() {
     const [isAttackMode, setIsAttackMode] = useState(false); // To let user test the agent
     const [backendTimeline, setBackendTimeline] = useState<DecisionNode[] | null>(null);
+    const [backendSummary, setBackendSummary] = useState<BackendReasoningResponse | null>(null);
 
     const [isLoading, setIsLoading] = useState(true);
     const [dataSource, setDataSource] = useState<'mock' | 'real'>('mock');
 
     const fetchMojoReasoning = async () => {
         try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-            const res = await fetch(`${apiUrl}/api/security/reasoning`);
-            if (res.ok) {
-                const data = await res.json();
+            const result = await fetchBackend<BackendReasoningResponse>('/api/security/reasoning');
+            if (result.ok && result.data) {
+                const data = result.data;
+                const steps = data.chain_of_thought.length > 0 ? data.chain_of_thought : [data.action_taken];
+                const realTimeline: DecisionNode[] = steps.slice(0, 4).map((step, index) => ({
+                    id: `real-${index + 1}`,
+                    time: new Date().toISOString().split('T')[1].slice(0, 12),
+                    action: index === 0 ? data.action_taken : `Reasoning Step ${index + 1}`,
+                    thought: step,
+                    confidence: Math.round(data.confidence_score),
+                    source: data.engine || 'FastAPI + Mojo Backend',
+                    status: data.analysis_status === 'fallback' ? 'alert' : 'safe',
+                    icon: Cpu,
+                }));
                 const newNode: DecisionNode = {
-                    id: 'b1',
+                    id: 'summary',
                     time: new Date().toISOString().split('T')[1].slice(0, 12),
                     action: data.action_taken || 'Mojo Threat Analysis',
-                    thought: data.chain_of_thought || JSON.stringify(data.reasoning_chain),
-                    confidence: data.confidence_score ? data.confidence_score * 100 : data.confidence * 100,
+                    thought: data.chain_of_thought.join(' • '),
+                    confidence: Math.round(data.confidence_score),
                     source: 'FastAPI + Mojo Backend',
-                    status: (data.confidence_score || data.confidence) > 0.8 ? 'safe' : 'alert',
+                    status: data.confidence_score > 70 ? 'safe' : 'alert',
                     icon: Cpu
                 };
-                setBackendTimeline([
-                    originalTimeline[0],
-                    newNode,
-                    ...originalTimeline.slice(2)
-                ]);
+                setBackendSummary(data);
+                setBackendTimeline([realTimeline[0] ?? newNode, newNode, ...realTimeline.slice(1)]);
                 setDataSource('real');
             } else {
                 setBackendTimeline(originalTimeline);
@@ -142,6 +151,7 @@ export default function ReasoningPage() {
     }, []);
 
     const mockTimeline = isAttackMode ? attackTimeline : (backendTimeline || originalTimeline);
+    const dataLabel = backendSummary?.analysis_status === 'fallback' ? 'BACKEND FALLBACK' : dataSource === 'real' ? 'REAL MOJO DATA' : 'MOCK DATA';
 
     return (
         <div className="space-y-8 max-w-5xl mx-auto pb-10">
@@ -185,7 +195,7 @@ export default function ReasoningPage() {
                         </div>
                         <span className="text-xs font-mono text-cyan-400">aethercore_debugger_v2.1</span>
                     </div>
-                    <div className="flex flex-wrap gap-2"><Badge color={dataSource === "real" ? "success" : "warning"} variant="neutral">{dataSource === "real" ? "REAL MOJO DATA" : "MOCK DATA"}</Badge><Badge color="cyan" variant="neutral">XAI MODE: ACTIVE</Badge></div>
+                    <div className="flex flex-wrap gap-2"><Badge color={dataSource === "real" ? "success" : "warning"} variant="neutral">{dataLabel}</Badge><Badge color="cyan" variant="neutral">XAI MODE: ACTIVE</Badge></div>
                 </div>
 
                 {/* Timeline body */}

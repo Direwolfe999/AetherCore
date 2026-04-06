@@ -7,24 +7,42 @@ import { GlassButton } from '@/components/ui/glass-button';
 import { Badge } from '@/components/ui/badge';
 import { Network, Shield, Key, Bot, Database, Zap, Activity, AlertOctagon, XCircle } from 'lucide-react';
 import React from 'react';
-
-// Mock Data
-const activePermissions = [
-    { id: 1, name: 'Gmail Read/Write', service: 'Google Workspace', status: 'active' },
-    { id: 2, name: 'Calendar Edit', service: 'Google Workspace', status: 'active' },
-    { id: 3, name: 'Repository Access', service: 'GitHub', status: 'paused' },
-];
-
-const auditLogs = [
-    { id: 1, time: '14:02:45', action: 'Token Fetched', actor: 'AetherCore Agent', target: 'Google Calendar API', status: 'Success' },
-    { id: 2, time: '13:15:22', action: 'Key Rotated', actor: 'Auth0 Guardian', target: 'Internal Vault', status: 'Success' },
-    { id: 3, time: '09:44:10', action: 'Token Fetched', actor: 'AetherCore Agent', target: 'Gmail API', status: 'Success' },
-    { id: 4, time: '08:00:05', action: 'Policy Override', actor: 'User', target: 'GitHub Access', status: 'Blocked' },
-];
+import { fetchBackend, type BackendOverview } from '@/lib/backend';
 
 export default function GovernancePage() {
     const [isRevoked, setIsRevoked] = React.useState(false);
     const [isGlitching, setIsGlitching] = React.useState(false);
+    const [backendOverview, setBackendOverview] = React.useState<BackendOverview | null>(null);
+
+    React.useEffect(() => {
+        const loadOverview = async () => {
+            const result = await fetchBackend<BackendOverview>('/api/status/overview');
+            if (result.ok && result.data) {
+                setBackendOverview(result.data);
+            }
+        };
+
+        loadOverview();
+    }, []);
+
+    const activePermissions = backendOverview
+        ? [
+            { id: 1, name: 'Auth0 Session Validation', service: 'Auth0', status: backendOverview.auth0_configured ? 'active' : 'paused' },
+            { id: 2, name: 'Mojo Runtime Health', service: 'Mojo', status: backendOverview.mojo.exists ? 'active' : 'paused' },
+            { id: 3, name: 'Queue Broker Connectivity', service: 'Redis/Celery', status: backendOverview.queue.broker.includes('redis') ? 'active' : 'paused' },
+        ]
+        : [
+            { id: 1, name: 'Backend Status', service: 'Unknown', status: 'paused' },
+        ];
+
+    const auditLogs = backendOverview
+        ? [
+            { id: 1, time: 'LIVE', action: 'Environment Loaded', actor: 'Backend', target: backendOverview.environment, status: 'Success' },
+            { id: 2, time: 'LIVE', action: 'Auth0 Config Checked', actor: 'Backend', target: backendOverview.auth0_configured ? 'Configured' : 'Missing', status: backendOverview.auth0_configured ? 'Success' : 'Blocked' },
+            { id: 3, time: 'LIVE', action: 'Mojo Runtime Checked', actor: 'Backend', target: backendOverview.mojo.status, status: backendOverview.mojo.exists ? 'Success' : 'Blocked' },
+            { id: 4, time: 'LIVE', action: 'Queue Broker Checked', actor: 'Backend', target: backendOverview.queue.broker, status: 'Success' },
+        ]
+        : [];
 
     const handleRevoke = () => {
         setIsGlitching(true);

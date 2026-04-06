@@ -15,6 +15,7 @@ import {
 import { GlassCard } from '@/components/ui/glass-card';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { Badge } from '@/components/ui/badge';
+import { fetchBackend, type BackendOverview } from '@/lib/backend';
 
 interface SettingToggle {
     id: string;
@@ -25,21 +26,6 @@ interface SettingToggle {
     color: 'cyan' | 'orange' | 'green';
     badge?: string;
 }
-
-interface MojoLog {
-    timestamp: string;
-    level: 'info' | 'warn' | 'error';
-    message: string;
-}
-
-const mockMojoLogs: MojoLog[] = [
-    { timestamp: '23:41:23', level: 'info', message: 'Mojo engine initialized successfully' },
-    { timestamp: '23:40:15', level: 'info', message: 'Loading threat intelligence database' },
-    { timestamp: '23:38:52', level: 'warn', message: 'High memory usage detected - compacting cache' },
-    { timestamp: '23:37:44', level: 'info', message: 'Token vault synchronized' },
-    { timestamp: '23:35:10', level: 'error', message: 'Brute force attempt detected - blocking' },
-    { timestamp: '23:33:28', level: 'info', message: 'Security audit completed' },
-];
 
 export default function SettingsPage() {
     const [settings, setSettings] = useState<SettingToggle[]>([
@@ -91,6 +77,27 @@ export default function SettingsPage() {
     const [clickCount, setClickCount] = useState(0);
     const [lastClickTime, setLastClickTime] = useState(0);
     const [showEasterEgg, setShowEasterEgg] = useState(false);
+    const [backendOverview, setBackendOverview] = useState<BackendOverview | null>(null);
+
+    useEffect(() => {
+        const loadBackendOverview = async () => {
+            const result = await fetchBackend<BackendOverview>('/api/status/overview');
+            if (result.ok && result.data) {
+                setBackendOverview(result.data);
+            }
+        };
+
+        loadBackendOverview();
+    }, []);
+
+    const runtimeLogs = backendOverview
+        ? [
+            { timestamp: 'LIVE', level: 'info' as const, message: `Environment: ${backendOverview.environment}` },
+            { timestamp: 'LIVE', level: backendOverview.auth0_configured ? 'info' as const : 'warn' as const, message: backendOverview.auth0_configured ? 'Auth0 configuration detected' : 'Auth0 configuration incomplete' },
+            { timestamp: 'LIVE', level: backendOverview.mojo.exists ? 'info' as const : 'error' as const, message: backendOverview.mojo.exists ? `Mojo binary ready: ${backendOverview.mojo.status}` : 'Mojo binary missing; fallback mode active' },
+            { timestamp: 'LIVE', level: 'info' as const, message: `Queue broker: ${backendOverview.queue.broker}` },
+        ]
+        : [];
 
     const toggleSetting = (id: string) => {
         setSettings((prev) =>
@@ -349,7 +356,7 @@ export default function SettingsPage() {
 
                                 {/* Logs */}
                                 <div className="space-y-2 font-mono text-xs max-h-64 overflow-y-auto">
-                                    {mockMojoLogs.map((log, idx) => {
+                                    {runtimeLogs.length > 0 ? runtimeLogs.map((log, idx) => {
                                         const logColors = {
                                             info: 'text-cyan-400',
                                             warn: 'text-yellow-400',
@@ -377,7 +384,11 @@ export default function SettingsPage() {
                                                 <span className="flex-1 text-gray-300">{log.message}</span>
                                             </motion.div>
                                         );
-                                    })}
+                                    }) : (
+                                        <div className="rounded border border-white/10 bg-white/5 p-3 text-xs text-gray-400">
+                                            Waiting for backend diagnostics...
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </GlassCard>

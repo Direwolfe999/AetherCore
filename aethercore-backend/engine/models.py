@@ -23,6 +23,15 @@ class MojoAnalysisOutput(ThreatAnalysisResponse):
     pass
 
 
+class SystemOverviewResponse(BaseModel):
+    status: str
+    environment: str
+    database_url: str
+    auth0_configured: bool
+    mojo: dict
+    queue: dict
+
+
 class SyncRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     auth0_token: str | None = None

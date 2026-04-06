@@ -18,3 +18,9 @@ dist
 **/.venv/
 venv/
 *.pyc
+
+# Local/internal planning docs not intended for production/public repo view
+docs/FILE_MANIFEST.md
+docs/PROJECT_SUMMARY.md
+docs/QUICKSTART.md
+docs/PRODUCTION_READINESS_PLAN.md

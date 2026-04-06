@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { PulseIndicator } from '@/components/ui/pulse-indicator';
 import { DecryptedText } from '@/components/ui/decrypted-text';
+import { fetchBackend, type BackendReasoningResponse } from '@/lib/backend';
 
 interface ThreatEvent {
     id: string;
@@ -23,7 +24,7 @@ const severityConfig = {
     critical: { color: 'danger' as const, icon: AlertOctagon, label: 'Critical', bgColor: 'bg-red-500/10' },
 };
 
-const mockThreatEvents: ThreatEvent[] = [
+const fallbackThreatEvents: ThreatEvent[] = [
     {
         id: '1',
         timestamp: '23:41:23.847',
@@ -63,9 +64,37 @@ const mockThreatEvents: ThreatEvent[] = [
 ];
 
 export default function IntelligencePage() {
-    const [events, setEvents] = useState<ThreatEvent[]>(mockThreatEvents);
+    const [events, setEvents] = useState<ThreatEvent[]>(fallbackThreatEvents);
     const [isLive, setIsLive] = useState(true);
+    const [dataSource, setDataSource] = useState<'fallback' | 'backend'>('fallback');
     const scrollRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        const loadBackendFeed = async () => {
+            const result = await fetchBackend<BackendReasoningResponse>('/api/security/reasoning');
+
+            if (result.ok && result.data) {
+                const backendData = result.data;
+                const backendEvents = backendData.chain_of_thought.map((message, index) => ({
+                    id: `backend-${index}`,
+                    timestamp: new Date().toLocaleTimeString('en-US', {
+                        hour12: false,
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        fractionalSecondDigits: 3,
+                    }).replace(/:/g, ':'),
+                    severity: backendData.confidence_score > 80 ? 'low' : 'high',
+                    message,
+                })) satisfies ThreatEvent[];
+
+                setEvents((prev) => [...backendEvents.slice(-6), ...prev.slice(0, 4)]);
+                setDataSource('backend');
+            }
+        };
+
+        loadBackendFeed();
+    }, []);
+
 
     // Auto-scroll logic
     useEffect(() => {
@@ -163,7 +192,7 @@ export default function IntelligencePage() {
                     {/* Terminal Header */}
                     <div className="flex items-center gap-2 border-b border-white/10 pb-3">
                         <Terminal className="h-4 w-4 text-cyan-400" strokeWidth={1.5} />
-                        <span className="text-cyan-400">threat-intel.log</span>
+                        <span className="text-cyan-400">{dataSource === 'backend' ? 'backend-intel.log' : 'threat-intel.log'}</span>
                         <span className="ml-auto text-xs text-gray-500">
                             {events.length} / max 50
                         </span>

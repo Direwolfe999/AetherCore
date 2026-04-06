@@ -12,6 +12,7 @@ import { SectionHeading } from '@/components/ui/section-heading';
 import { Badge } from '@/components/ui/badge';
 import { Globe } from '@/components/dashboard/globe';
 import { ArchitectureMap } from '@/components/dashboard/architecture-map';
+import { fetchBackend, type BackendOverview } from '@/lib/backend';
 
 interface SecurityMetric {
     label: string;
@@ -24,11 +25,12 @@ interface SecurityMetric {
 export default function DashboardPage() {
     const [securityScore, setSecurityScore] = useState(0);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [backendOverview, setBackendOverview] = useState<BackendOverview | null>(null);
 
     // Animate security score from 0 to target on page load
     useEffect(() => {
         setIsLoaded(true);
-        const target = 87;
+        const target = backendOverview?.mojo.exists && backendOverview?.auth0_configured ? 94 : 82;
         const duration = 2000;
         const startTime = Date.now();
 
@@ -44,6 +46,17 @@ export default function DashboardPage() {
         };
 
         animate();
+    }, [backendOverview]);
+
+    useEffect(() => {
+        const loadOverview = async () => {
+            const result = await fetchBackend<BackendOverview>('/api/status/overview');
+            if (result.ok && result.data) {
+                setBackendOverview(result.data);
+            }
+        };
+
+        loadOverview();
     }, []);
 
     // Animate stability bars
@@ -60,13 +73,13 @@ export default function DashboardPage() {
     }, []);
 
     const metrics: SecurityMetric[] = useMemo(() => [
-        { label: 'Active Scans', value: 3, color: 'cyan', data: Array.from({ length: 20 }, () => ({ val: Math.random() * 10 })) },
-        { label: 'Threats Blocked', value: 247, color: 'green', data: Array.from({ length: 20 }, () => ({ val: 100 + Math.random() * 150 })) },
-        { label: 'System Health', value: '98%', color: 'cyan', data: Array.from({ length: 20 }, () => ({ val: 90 + Math.random() * 10 })) },
-        { label: 'Response Time', value: 34, unit: 'ms', color: 'green', data: Array.from({ length: 20 }, () => ({ val: 20 + Math.random() * 30 })) },
-    ], []);
+        { label: 'Backend Env', value: backendOverview?.environment ?? 'local', color: 'cyan', data: Array.from({ length: 20 }, () => ({ val: backendOverview?.auth0_configured ? 90 : 40 })) },
+        { label: 'Auth0 Ready', value: backendOverview?.auth0_configured ? 'Yes' : 'No', color: backendOverview?.auth0_configured ? 'green' : 'orange', data: Array.from({ length: 20 }, () => ({ val: backendOverview?.auth0_configured ? 100 : 35 })) },
+        { label: 'Mojo Runtime', value: backendOverview?.mojo.status ?? 'unknown', color: backendOverview?.mojo.exists ? 'green' : 'orange', data: Array.from({ length: 20 }, () => ({ val: backendOverview?.mojo.exists ? 95 : 30 })) },
+        { label: 'Queue', value: backendOverview?.queue.broker.includes('redis') ? 'Ready' : 'Offline', color: backendOverview?.queue.broker.includes('redis') ? 'green' : 'orange', data: Array.from({ length: 20 }, () => ({ val: backendOverview?.queue.broker.includes('redis') ? 88 : 20 })) },
+    ], [backendOverview]);
 
-    const threatActive = coreLoad > 60 || networkLatency > 30;
+    const threatActive = !(backendOverview?.auth0_configured && backendOverview?.mojo.exists);
 
     return (
         <div className="space-y-8">
@@ -125,7 +138,7 @@ export default function DashboardPage() {
                                 <span className="text-xl text-gray-400">/100</span>
                             </div>
                             <span className="mt-2 text-sm font-medium text-gray-300">
-                                Protection Shield
+                                {backendOverview?.auth0_configured ? 'Protection Shield' : 'Backend Pending'}
                             </span>
                             <div className="mt-4 flex gap-1">
                                 {[...Array(5)].map((_, i) => (
@@ -231,10 +244,10 @@ export default function DashboardPage() {
 
                             <div className="space-y-3 border-t border-white/10 pt-4">
                                 {[
-                                    { msg: 'Auth0 API Rate Limit hit -> Graceful Backoff', time: 'Just now', color: 'bg-orange-400' },
-                                    { msg: 'Agent re-routed to secondary Auth0 RPC', time: '2m ago', color: 'bg-cyan-400' },
-                                    { msg: 'Missing Google Token: Handled via 403 UI', time: '14m ago', color: 'bg-green-400' },
-                                    { msg: 'Threat signature DB synced to v4.2', time: '1h ago', color: 'bg-cyan-400' },
+                                    { msg: backendOverview?.auth0_configured ? 'Auth0 session plumbing detected' : 'Auth0 session plumbing missing', time: 'Now', color: backendOverview?.auth0_configured ? 'bg-green-400' : 'bg-orange-400' },
+                                    { msg: backendOverview?.mojo.exists ? `Mojo binary: ${backendOverview.mojo.status}` : 'Mojo binary unavailable; fallback analysis active', time: 'Now', color: backendOverview?.mojo.exists ? 'bg-cyan-400' : 'bg-orange-400' },
+                                    { msg: `Backend environment: ${backendOverview?.environment ?? 'local'}`, time: 'Now', color: 'bg-cyan-400' },
+                                    { msg: `Queue broker: ${backendOverview?.queue.broker ?? 'unset'}`, time: 'Now', color: 'bg-green-400' },
                                 ].map((activity, idx) => (
                                     <motion.div
                                         key={idx}

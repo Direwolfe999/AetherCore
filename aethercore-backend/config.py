@@ -1,8 +1,9 @@
 from functools import lru_cache
+from typing import Annotated
 from typing import List
 
 from pydantic import Field, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -40,17 +41,17 @@ class Settings(BaseSettings):
     max_request_body_bytes: int = Field(default=1_048_576, alias="MAX_REQUEST_BODY_BYTES")
     rate_limit_requests_per_window: int = Field(default=120, alias="RATE_LIMIT_REQUESTS_PER_WINDOW")
     rate_limit_window_seconds: int = Field(default=60, alias="RATE_LIMIT_WINDOW_SECONDS")
-    rate_limit_exempt_paths: List[str] = Field(default_factory=lambda: [
+    rate_limit_exempt_paths: Annotated[List[str], NoDecode] = Field(default_factory=lambda: [
         "/health",
         "/metrics",
     ], alias="RATE_LIMIT_EXEMPT_PATHS")
-    cors_origins: List[str] = Field(default_factory=lambda: [
+    cors_origins: Annotated[List[str], NoDecode] = Field(default_factory=lambda: [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
     ], alias="CORS_ORIGINS")
     cors_allow_credentials: bool = True
-    cors_allow_methods: List[str] = Field(default_factory=lambda: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
-    cors_allow_headers: List[str] = Field(default_factory=lambda: ["Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With"])
+    cors_allow_methods: Annotated[List[str], NoDecode] = Field(default_factory=lambda: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
+    cors_allow_headers: Annotated[List[str], NoDecode] = Field(default_factory=lambda: ["Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With"])
 
     @field_validator("cors_origins", mode="before")
     @classmethod
@@ -66,6 +67,20 @@ class Settings(BaseSettings):
 
         if isinstance(value, list):
             return [str(origin).strip() for origin in value if str(origin).strip()]
+
+        return [str(value).strip()]
+
+    @field_validator("rate_limit_exempt_paths", "cors_allow_methods", "cors_allow_headers", mode="before")
+    @classmethod
+    def parse_string_list_fields(cls, value: object) -> List[str]:
+        if value is None:
+            return []
+
+        if isinstance(value, str):
+            return [item.strip() for item in value.split(",") if item.strip()]
+
+        if isinstance(value, list):
+            return [str(item).strip() for item in value if str(item).strip()]
 
         return [str(value).strip()]
 

@@ -8,6 +8,7 @@ import { GlassButton } from '@/components/ui/glass-button';
 import { Badge } from '@/components/ui/badge';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { PulseIndicator } from '@/components/ui/pulse-indicator';
+import { fetchBackend, type BackendOverview } from '@/lib/backend';
 
 interface ConnectedAccount {
     id: string;
@@ -43,6 +44,20 @@ export default function VaultPage() {
     // Step-Up MFA Challenge Simulation
     const [showMfaChallenge, setShowMfaChallenge] = useState<string | null>(null);
     const [mfaStatus, setMfaStatus] = useState<'pending' | 'success'>('pending');
+    const [backendOverview, setBackendOverview] = useState<BackendOverview | null>(null);
+    const [syncJobId, setSyncJobId] = useState<string | null>(null);
+    const [syncJobState, setSyncJobState] = useState<'idle' | 'queued' | 'failed'>('idle');
+
+    useEffect(() => {
+        const loadOverview = async () => {
+            const result = await fetchBackend<BackendOverview>('/api/status/overview');
+            if (result.ok && result.data) {
+                setBackendOverview(result.data);
+            }
+        };
+
+        loadOverview();
+    }, []);
 
     const handleRotateKeyRequest = (id: string) => {
         setShowMfaChallenge(id);
@@ -92,6 +107,21 @@ export default function VaultPage() {
             setKeyInSafe(true);
             setTimeout(() => setKeyInSafe(false), 800);
         }
+    };
+
+    const queueLiveSync = async () => {
+        setSyncJobState('queued');
+        const result = await fetchBackend<{ status: string; job_id: string }>('/api/jobs/sync', {
+            method: 'POST',
+        });
+
+        if (result.ok && result.data) {
+            setSyncJobId(result.data.job_id);
+            setSyncJobState('idle');
+            return;
+        }
+
+        setSyncJobState('failed');
     };
 
     return (
@@ -354,6 +384,34 @@ export default function VaultPage() {
                     })}
                 </div>
             </div>
+
+            {/* Live Backend Sync */}
+            <GlassCard glow="cyan">
+                <div className="space-y-4">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <h3 className="font-semibold text-white">Live Backend Sync</h3>
+                            <p className="text-sm text-gray-400">
+                                Queue a real backend job against Auth0, Google, GitHub, and Mojo.
+                            </p>
+                        </div>
+                        <Badge color={backendOverview?.mojo.exists ? 'green' : 'orange'}>
+                            {backendOverview?.mojo.exists ? 'Backend Ready' : 'Fallback Mode'}
+                        </Badge>
+                    </div>
+
+                    <div className="flex flex-col gap-3 sm:flex-row">
+                        <GlassButton variant="primary" size="lg" onClick={queueLiveSync} className="flex-1">
+                            {syncJobState === 'queued' ? 'Queueing...' : 'Queue Sync Job'}
+                        </GlassButton>
+                        {syncJobId && (
+                            <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-xs font-mono text-gray-300 break-all flex-1">
+                                Job ID: {syncJobId}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </GlassCard>
 
             {/* Info Card */}
             <motion.div
