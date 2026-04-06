@@ -17,7 +17,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "AetherCore Premium Frontend",
+    title: "AetherCore | Central Intelligence",
     description: "Sovereign AI Guardian Interface",
 };
 

@@ -22,6 +22,14 @@ class Settings(BaseSettings):
     auth0_audience: str = Field(default="", alias="AUTH0_AUDIENCE")
     auth0_roles_claim: str = Field(default="https://aethercore.ai/roles", alias="AUTH0_ROLES_CLAIM")
     auth0_permissions_claim: str = Field(default="permissions", alias="AUTH0_PERMISSIONS_CLAIM")
+    auth0_client_id: str = Field(default="", alias="AUTH0_CLIENT_ID")
+    auth0_client_secret: str = Field(default="", alias="AUTH0_CLIENT_SECRET")
+    google_client_id: str = Field(default="", alias="GOOGLE_CLIENT_ID")
+    google_client_secret: str = Field(default="", alias="GOOGLE_CLIENT_SECRET")
+    google_redirect_uri: str = Field(default="http://localhost:3000/api/oauth/google/callback", alias="GOOGLE_REDIRECT_URI")
+    github_client_id: str = Field(default="", alias="GITHUB_CLIENT_ID")
+    github_client_secret: str = Field(default="", alias="GITHUB_CLIENT_SECRET")
+    github_redirect_uri: str = Field(default="http://localhost:3000/api/oauth/github/callback", alias="GITHUB_REDIRECT_URI")
     cors_origins: List[str] = Field(default_factory=lambda: [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
