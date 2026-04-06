@@ -16,6 +16,11 @@ class Settings(BaseSettings):
     app_env: str = Field(default="development", alias="APP_ENV")
     log_level: str = Field(default="INFO", alias="LOG_LEVEL")
     frontend_url: str | None = Field(default=None, alias="FRONTEND_URL")
+    auth0_domain: str = Field(default="", alias="AUTH0_DOMAIN")
+    auth0_issuer_base_url: str = Field(default="", alias="AUTH0_ISSUER_BASE_URL")
+    auth0_audience: str = Field(default="", alias="AUTH0_AUDIENCE")
+    auth0_roles_claim: str = Field(default="https://aethercore.ai/roles", alias="AUTH0_ROLES_CLAIM")
+    auth0_permissions_claim: str = Field(default="permissions", alias="AUTH0_PERMISSIONS_CLAIM")
     cors_origins: List[str] = Field(default_factory=lambda: [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
@@ -48,6 +53,17 @@ class Settings(BaseSettings):
             origins.append(self.frontend_url)
 
         return origins
+
+    def resolved_auth0_issuer(self) -> str:
+        issuer = self.auth0_issuer_base_url.strip() if self.auth0_issuer_base_url else ""
+
+        if not issuer and self.auth0_domain.strip():
+            issuer = f"https://{self.auth0_domain.strip().removeprefix('https://').removeprefix('http://')}"
+
+        return issuer.rstrip("/")
+
+    def resolved_auth0_jwks_url(self) -> str:
+        return f"{self.resolved_auth0_issuer()}/.well-known/jwks.json"
 
 
 @lru_cache(maxsize=1)

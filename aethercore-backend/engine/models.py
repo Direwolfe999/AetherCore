@@ -7,4 +7,4 @@ class ThreatAnalysisResponse(BaseModel):
     action_taken: str
 
 class SyncRequest(BaseModel):
-    auth0_token: str
+    auth0_token: str | None = None

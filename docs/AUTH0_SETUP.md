@@ -43,10 +43,22 @@ The app wraps the tree with `UserProvider` in `src/app/layout.tsx`, and the clie
 
 If you want stricter security, also review:
 
-- `AUTH0_AUDIENCE` if you call protected APIs with access tokens
+- `AUTH0_AUDIENCE` for the backend API identifier that your access tokens must target
+- `AUTH0_ROLES_CLAIM` for the custom namespace used to carry roles in access tokens
+- `AUTH0_PERMISSIONS_CLAIM` if you store permissions in a custom claim
 - `AUTH0_SCOPE` if you need custom token scopes
 - `AUTH0_SESSION_ROLLING` and `AUTH0_SESSION_ABSOLUTE_DURATION` for session policy
 - `AUTH0_IDP_LOGOUT` if you want logout to end the upstream IdP session
+
+## Backend API protection
+
+The FastAPI backend now requires a valid Auth0 bearer access token for protected routes.
+
+- Send backend requests with `Authorization: Bearer <access_token>`
+- The access token must be issued for the backend `AUTH0_AUDIENCE`
+- The backend checks scopes such as `sync:write` and `analysis:read`
+- The backend also recognizes roles from the custom claim defined by `AUTH0_ROLES_CLAIM`
+- Recommended roles for production are `Admin`, `Guardian`, and `Analyst`
 
 ## Verification checklist
 
@@ -56,3 +68,4 @@ After setting the variables, verify that:
 2. Auth0 returns to `/api/auth/callback`
 3. `/api/auth/me` returns the active user after login
 4. Logout returns to the configured base URL
+5. Protected backend routes reject requests without a valid bearer access token

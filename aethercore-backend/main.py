@@ -1,11 +1,12 @@
 import logging
 
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from config import get_settings
+from security.auth import AuthenticatedUser, require_auth
 from engine.models import SyncRequest, ThreatAnalysisResponse
 from logging_config import configure_logging
 from middleware import RequestContextMiddleware
@@ -89,16 +90,18 @@ def health_check():
     }
 
 @app.post("/api/sync/google")
-async def sync_google(request: SyncRequest):
+async def sync_google(
+    request: SyncRequest | None = None,
+    current_user: AuthenticatedUser = Depends(
+        require_auth(required_scopes={"sync:write"}, required_roles={"Admin", "Guardian"})
+    ),
+):
     """
     Validates User's JWT, trades it for a Google Access Token from Auth0 Vault,
     and runs the sync_engine.
     """
-    if not request.auth0_token:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing Auth0 Token")
-    
     # 1. Fetch real tokens from Token Vault
-    google_token = await vault_service.exchange_token_for_google(request.auth0_token)
+    google_token = await vault_service.exchange_token_for_google(current_user.access_token)
     
     # 2. Sync Google data & run Mojo Analysis
     analysis_result = await sync_engine.sync_google_data(google_token)
@@ -106,7 +109,11 @@ async def sync_google(request: SyncRequest):
     return {"status": "sync_complete", "analysis": analysis_result}
 
 @app.get("/api/security/reasoning", response_model=ThreatAnalysisResponse)
-async def get_reasoning():
+async def get_reasoning(
+    current_user: AuthenticatedUser = Depends(
+        require_auth(required_scopes={"analysis:read"}, required_roles={"Admin", "Guardian", "Analyst"})
+    ),
+):
     """
     Returns the reasoning chain and confidence scored by the Mojo engine.
     """
