@@ -8,7 +8,7 @@ import { MobileBottomDock } from "@/components/navigation/mobile-bottom-dock";
 import { CommandPalette } from "@/components/navigation/command-palette";
 import { GlobalBootManager } from "@/components/ui/global-boot-manager";
 import { Toaster } from "sonner";
-import { UserProvider } from '@auth0/nextjs-auth0/client';
+import { Auth0Provider } from '@auth0/nextjs-auth0/client';
 import { DisableInteraction } from "@/components/ui/disable-interaction";
 
 import { Suspense } from "react";
@@ -29,7 +29,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${inter.className} overflow-x-hidden`}>
-                <UserProvider>
+                <Auth0Provider>
                     <GlobalBootManager>
                         <div className="relative min-h-screen w-full overflow-x-clip bg-black">
                             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(0,240,255,0.08),transparent_45%)]" />
@@ -55,7 +55,7 @@ export default function RootLayout({
                         </div>
                         <Toaster theme="dark" position="bottom-right" toastOptions={{ className: 'border border-white/10 bg-black/50 text-white font-mono' }} />
                     </GlobalBootManager>
-                </UserProvider>
+                </Auth0Provider>
             </body>
         </html>
     );

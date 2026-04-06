@@ -18,11 +18,11 @@ export function useAuthState(): UseAuthStateReturn {
     const { user, error, isLoading } = useUser();
 
     const login = () => {
-        window.location.href = '/api/auth/login';
+        window.location.href = '/auth/login';
     };
 
     const logout = () => {
-        window.location.href = '/api/auth/logout';
+        window.location.href = '/auth/logout';
     };
 
     return {
