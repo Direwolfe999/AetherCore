@@ -43,7 +43,7 @@ export default function Home() {
         >
             {/* Hero Section */}
             <motion.section variants={itemVariants} className="space-y-8 pt-8 md:pt-12">
-                <div className="relative">
+                <div className="relative overflow-hidden rounded-2xl">
                     {/* Background gradient glow */}
                     <div className="absolute -inset-20 bg-gradient-to-r from-cyan-500/20 via-transparent to-orange-500/20 blur-3xl opacity-40" />
 

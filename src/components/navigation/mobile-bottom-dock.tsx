@@ -85,7 +85,7 @@ export function MobileBottomDock() {
             animate={{ y: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             className={cn(
-                'fixed bottom-0 left-0 right-0 z-40 flex flex-col lg:hidden',
+                'fixed bottom-0 left-0 right-0 z-40 flex w-full flex-col overflow-x-clip lg:hidden',
                 'bg-gradient-to-t from-black/80 via-black/60 to-transparent',
                 'backdrop-blur-xl',
                 'safe-area-inset-bottom'
@@ -119,13 +119,13 @@ export function MobileBottomDock() {
                 </motion.div>
             )}
 
-            <div className="flex w-full items-end justify-around gap-1 px-2 py-3 border-t border-white/10 relative z-10 bg-black/20">
+            <div className="relative z-10 grid w-full grid-cols-5 gap-1 border-t border-white/10 bg-black/30 px-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2">
                 {mainNavItems.map((item) => {
                     const IconComponent = item.icon;
                     const active = isActive(item.path);
 
                     return (
-                        <Link key={item.path} href={item.path} className="flex-1 max-w-[80px]" onClick={() => setShowMore(false)}>
+                        <Link key={item.path} href={item.path} className="w-full min-w-0" onClick={() => setShowMore(false)}>
                             <motion.div
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.9 }}
@@ -167,7 +167,7 @@ export function MobileBottomDock() {
 
                 {/* More Button */}
                 <button
-                    className="flex-1 max-w-[80px] flex flex-col items-center justify-center gap-1.5 rounded-2xl px-1 py-2 text-gray-400 transition-colors"
+                    className="w-full min-w-0 flex flex-col items-center justify-center gap-1.5 rounded-2xl px-1 py-2 text-gray-400 transition-colors"
                     onClick={() => setShowMore(!showMore)}
                 >
                     <motion.div

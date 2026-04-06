@@ -28,10 +28,10 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={inter.className}>
+            <body className={`${inter.className} overflow-x-hidden`}>
                 <UserProvider>
                     <GlobalBootManager>
-                        <div className="relative min-h-screen bg-black">
+                        <div className="relative min-h-screen w-full overflow-x-clip bg-black">
                             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(0,240,255,0.08),transparent_45%)]" />
 
                             {/* Navigation Components */}
@@ -40,12 +40,12 @@ export default function RootLayout({
                             <MobileBottomDock />
                             <CommandPalette />
 
-                            <div className="relative z-10 flex min-h-screen flex-col lg:ml-20">
+                            <div className="relative z-10 flex min-h-screen max-w-full flex-col lg:ml-20">
                                 {/* Top padding for status bar */}
                                 <div className="h-16 md:h-14" />
 
                                 {/* Main Content */}
-                                <main className="flex-1 px-4 py-8 md:px-6 md:py-12 pb-24 lg:pb-8">
+                                <main className="flex-1 max-w-full px-4 py-8 pb-[calc(6.5rem+env(safe-area-inset-bottom))] md:px-6 md:py-12 lg:pb-8">
                                     {children}
                                 </main>
 
