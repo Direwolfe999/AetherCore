@@ -13,6 +13,7 @@ from observability.logging import configure_logging
 from observability.metrics import MetricsMiddleware, metrics_response, record_sync_job
 from observability.tracing import setup_tracing
 from middleware import RequestContextMiddleware
+from rate_limit import PayloadSizeLimitMiddleware, RateLimitConfig, RateLimitMiddleware
 from services.vault_service import VaultService
 from services.sync_engine import SyncEngine
 from workers.celery_app import celery_app
@@ -28,6 +29,15 @@ setup_tracing(app)
 
 app.add_middleware(RequestContextMiddleware)
 app.add_middleware(MetricsMiddleware)
+app.add_middleware(PayloadSizeLimitMiddleware, max_body_bytes=settings.max_request_body_bytes)
+app.add_middleware(
+    RateLimitMiddleware,
+    config=RateLimitConfig(
+        requests_per_window=settings.rate_limit_requests_per_window,
+        window_seconds=settings.rate_limit_window_seconds,
+        exempt_paths=set(settings.rate_limit_exempt_paths),
+    ),
+)
 
 # Setup CORS for the frontend
 app.add_middleware(

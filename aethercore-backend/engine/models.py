@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from typing import List
 
 
@@ -24,4 +24,5 @@ class MojoAnalysisOutput(ThreatAnalysisResponse):
 
 
 class SyncRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     auth0_token: str | None = None

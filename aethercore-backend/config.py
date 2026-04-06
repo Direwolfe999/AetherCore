@@ -36,6 +36,13 @@ class Settings(BaseSettings):
     celery_result_backend: str | None = Field(default=None, alias="CELERY_RESULT_BACKEND")
     mojo_binary_path: str = Field(default="./engine/analyzer", alias="MOJO_BINARY_PATH")
     mojo_timeout_seconds: float = Field(default=30.0, alias="MOJO_TIMEOUT_SECONDS")
+    max_request_body_bytes: int = Field(default=1_048_576, alias="MAX_REQUEST_BODY_BYTES")
+    rate_limit_requests_per_window: int = Field(default=120, alias="RATE_LIMIT_REQUESTS_PER_WINDOW")
+    rate_limit_window_seconds: int = Field(default=60, alias="RATE_LIMIT_WINDOW_SECONDS")
+    rate_limit_exempt_paths: List[str] = Field(default_factory=lambda: [
+        "/health",
+        "/metrics",
+    ], alias="RATE_LIMIT_EXEMPT_PATHS")
     cors_origins: List[str] = Field(default_factory=lambda: [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
@@ -62,7 +69,7 @@ class Settings(BaseSettings):
         return [str(value).strip()]
 
     def resolved_cors_origins(self) -> List[str]:
-        origins = list(dict.fromkeys(self.cors_origins))
+        origins = [origin for origin in dict.fromkeys(self.cors_origins) if origin != "*"]
 
         if self.frontend_url and self.frontend_url not in origins:
             origins.append(self.frontend_url)
