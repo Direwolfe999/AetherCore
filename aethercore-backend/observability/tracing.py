@@ -1,4 +1,6 @@
 import logging
+import os
+
 from fastapi import FastAPI
 
 logger = logging.getLogger(__name__)
@@ -7,6 +9,14 @@ logger = logging.getLogger(__name__)
 def setup_tracing(app: FastAPI, service_name: str = "aethercore-backend") -> None:
     """Best-effort tracing initialization with graceful no-op fallback."""
     try:
+        if os.getenv("APP_ENV", "development").lower() == "test":
+            logger.info("tracing_disabled", extra={"reason": "test_environment"})
+            return
+
+        if not os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT"):
+            logger.info("tracing_disabled", extra={"reason": "missing_otlp_endpoint"})
+            return
+
         from opentelemetry import trace
         from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
         from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
